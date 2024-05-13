@@ -40,4 +40,4 @@ $ node src/app.js
 
 
 ---
-> *Created by - Emil Andersen - 2023*
+> *Created by - Emil Andersen - 2024*
