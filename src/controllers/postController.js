@@ -16,7 +16,7 @@ class PostController {
     async getById(req, res){
         const postId = req.params.id;
         try{
-        const post = await postModel.getPostByUserId(postId)
+        const post = await postModel.getPostById(postId)
         if (!post){
             res.status(404).json({error:'post not found'});
         }
@@ -28,14 +28,13 @@ class PostController {
     }
     
     async create(req, res){
-        const {title, userId, description, brand, motor, modelYear, model, type, parentId}= req.body;
-        try{
-            const user = await userModel.getUserById(userId)
-            if (!user){
-                return res.status(400).json({error:'Bad request. User does not exist'});
-            }
+        const token = req.header("Authorization");
+        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId} = req.body;
 
-            const newpost = await postModel.createPost(title, userId, description, brand, motor, modelYear, model, type, parentId);
+        try{
+            const decoded = auth.verifyToken(token);
+
+            const newpost = await postModel.createPost(decoded.uid, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId);
             res.status(201).json(newpost);
         }
         catch(e){
@@ -45,7 +44,7 @@ class PostController {
 
     async update(req,res){
         const postId = req.params.id;
-        const {title, description, userId}= req.body;
+        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId}= req.body;
         const token= req.header("Authorization");
         try{
             const decoded= auth.verifyToken(token);
@@ -55,7 +54,7 @@ class PostController {
               return res.status(400).json({ error: 'This is not your post'});
             }
 
-            const updatedPost = postModel.updatePost(postId,title,description);
+            const updatedPost = await postModel.updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId);
             if (!updatedPost){
                 return res.status(404).json({error: 'post is not found'});
             }

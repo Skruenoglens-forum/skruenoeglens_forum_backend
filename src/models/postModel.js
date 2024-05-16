@@ -59,13 +59,13 @@ class PostModel {
     }
   }
   
-  async createPost(title, userid, description, brand, motor, firstRegistration, model, type, parentId) {
+  async createPost(userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId) {
     try {
       const query = `
-        INSERT INTO post (userId, title, description, carBrand, carModel, carMotor, carType, carFirstRegistration, parentId)
+        INSERT INTO post (userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [userid, title, description, brand, model, motor, firstRegistration, type, parentId]);
+      const [result] = await db.query(query, [userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId]);
       const insertedId = result.insertId;
       const newPost = await this.getPostById(insertedId);
       return newPost;
@@ -75,17 +75,17 @@ class PostModel {
     }
   }
 
-  async updatePost(postid, title, description) {
+  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId) {
     try {
       const query = `
         UPDATE post
-        SET title = ?, description = ? WHERE id = ?
+        SET title = ?, description = ?, carBrand = ?, carMotor = ?, carFirstRegistration = ?, carModel = ?, carType = ?, parentId = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [title, description, postid]);
+      const [result] = await db.query(query, [title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, postId]);
       if (result.affectedRows === 0) {
         return null;
       }
-      const updatedPost = await this.getPostById(Postid)
+      const updatedPost = await this.getPostById(postId)
       return updatedPost ;
     } catch (error) {
       console.error('Error in updateUser:', error);
