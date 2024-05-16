@@ -10,6 +10,9 @@ router.get('/', postController.getall);
 // GET specific post by ID
 router.get('/:id', postController.getById);
 
+// GET all posts by UserId
+router.get('/user/:id', postController.getAllByUserId);
+
 // POST create a new post
 router.post('/', authMiddleware.accountAuth, postController.create);
 

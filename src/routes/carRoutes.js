@@ -10,6 +10,9 @@ router.get('/', carController.getAll);
 // GET specific car by ID
 router.get('/:id', carController.getById);
 
+// GET all cars by UserId
+router.get('/user/:id', carController.getAllByUserId);
+
 // POST create a new car
 router.post('/', authMiddleware.accountAuth, carController.create);
 

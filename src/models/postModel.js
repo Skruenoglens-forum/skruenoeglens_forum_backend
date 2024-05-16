@@ -30,7 +30,7 @@ class PostModel {
     }
   }
 
-  async getPostByUserId(userId) {
+  async getAllPostsByUserId(userId) {
     try {
       const query = `
         SELECT *
@@ -38,9 +38,9 @@ class PostModel {
         WHERE userId = ?
       `;
       const [rows] = await db.query(query, [userId]);
-      return rows[0];
+      return rows;
     } catch (error) {
-      console.error('Error in getPostByUserId:', error);
+      console.error('Error in getAllPostsByUserId:', error);
       throw error;
     }
   }

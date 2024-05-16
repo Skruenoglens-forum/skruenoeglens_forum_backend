@@ -26,6 +26,18 @@ class PostController {
             res.status(500)({error: 'internal server error'})
         }
     }
+
+    async getAllByUserId(req, res) {
+        const userId = req.params.id;
+    
+        try {
+          const posts = await postModel.getAllPostsByUserId(userId);
+    
+          res.json(posts);
+        } catch (error) {
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      }
     
     async create(req, res){
         const token = req.header("Authorization");

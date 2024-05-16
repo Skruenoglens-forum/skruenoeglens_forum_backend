@@ -27,6 +27,18 @@ class CarController {
     }
   }
 
+  async getAllByUserId(req, res) {
+    const userId = req.params.id;
+
+    try {
+      const cars = await carModel.getAllCarsByUserId(userId);
+
+      res.json(cars);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
   async create(req, res) {
     const token = req.header("Authorization");
     const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;

@@ -30,6 +30,21 @@ class CarModel {
     }
   }
 
+  async getAllCarsByUserId(userId) {
+    try {
+      const query = `
+        SELECT *
+        FROM car
+        WHERE userId = ?
+      `;
+      const [rows] = await db.query(query, [userId]);
+      return rows;
+    } catch (error) {
+      console.error('Error in getAllCarsByUserId:', error);
+      throw error;
+    }
+  }
+
   async getCarById(carId) {
     try {
       const query = `
