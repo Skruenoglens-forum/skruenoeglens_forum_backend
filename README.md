@@ -1,8 +1,8 @@
-# UserManagementBackendNodejs
+# SkruenoeglensBackendAPI
 
 ### **How to setup project in docker**
 ```bash
-# Use docker-compose it runs MySQL DB, phpMyAdmin and usermanagement API
+# Use docker-compose it runs MySQL DB, phpMyAdmin and skruenoeglen API
 $ docker-compose up -d
 
 # copy & paste dump.sql into MySQL db - http://localhost:8080
