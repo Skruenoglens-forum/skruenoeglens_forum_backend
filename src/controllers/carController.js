@@ -28,10 +28,13 @@ class CarController {
   }
 
   async create(req, res) {
-    const { userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration } = req.body;
+    const token = req.header("Authorization");
+    const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;
 
     try {
-      const newCar = await carModel.createCar(userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration);
+      const decoded = auth.verifyToken(token);
+
+      const newCar = await carModel.createCar(decoded.uid, brand, motor, firstRegistration, model, type, licensePlate, vin);
 
       res.status(201).json(newCar);
     } catch (error) {
@@ -41,7 +44,7 @@ class CarController {
 
   async update(req, res) {
     const carId = req.params.id;
-    const { brand, model, motor, type, year, licensePlate, vin, firstRegistration } = req.body;
+    const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;
     const token = req.header("Authorization");
 
     try {
@@ -52,7 +55,7 @@ class CarController {
         return res.status(400).json({ error: 'This is not your car' });
       }
 
-      const updatedCar = await carModel.updateCar(carId, brand, model, motor, type, year, licensePlate, vin, firstRegistration);
+      const updatedCar = await carModel.updateCar(carId, brand, motor, firstRegistration, model, type, licensePlate, vin);
       if (!updatedCar) {
         return res.status(404).json({ error: 'Car not found' });
       }

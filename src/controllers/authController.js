@@ -38,7 +38,7 @@ class UserController {
 
   async newPassword(req, res) {
     const userId = req.params.id;
-    const { newpassword } = req.body;
+    const { newPassword } = req.body;
     const token = req.header("Authorization");
 
     try {
@@ -47,14 +47,15 @@ class UserController {
         return res.status(403).json({ error: 'You are not allowed to update other users' });
       }
 
-      const newPasswordHash = bcrypt.hashSync(newpassword, 10);
+      const newPasswordHash = bcrypt.hashSync(newPassword, 10);
 
-      await userModel.newPassword(userId/*decoded.uid*/, newPasswordHash);
+      await userModel.newPassword(userId, newPasswordHash);
 
       return res.json({
         message: "Successfull"
       });
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: 'Internal server error' });
     }
   }

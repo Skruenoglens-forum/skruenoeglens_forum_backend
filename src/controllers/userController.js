@@ -51,7 +51,7 @@ class UserController {
 
   async update(req, res) {
     const userId = req.params.id;
-    const { name, email } = req.body;
+    const { name, email, description } = req.body;
     const token = req.header("Authorization");
 
     try {
@@ -65,7 +65,7 @@ class UserController {
         return res.status(400).json({ error: 'Email is taken by other user' });
       }
 
-      const updatedUser = await userModel.updateUser(userId, name, email);
+      const updatedUser = await userModel.updateUser(userId, name, email, description);
       if (!updatedUser) {
         return res.status(404).json({ error: 'User not found' });
       }

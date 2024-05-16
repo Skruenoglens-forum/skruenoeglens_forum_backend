@@ -78,13 +78,13 @@ class UserModel {
     }
   }
 
-  async updateUser(userId, name, email) {
+  async updateUser(userId, name, email, description) {
     try {
       const query = `
         UPDATE users
-        SET name = ?, email = ? WHERE id = ?
+        SET name = ?, email = ?, description = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [name, email, userId]);
+      const [result] = await db.query(query, [name, email, description, userId]);
       if (result.affectedRows === 0) {
         return null;
       }
