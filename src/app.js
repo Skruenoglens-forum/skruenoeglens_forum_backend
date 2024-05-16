@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { config } = require('./utils/config');
 const userRoutes = require('./routes/userRoutes');
+const carRoutes = require('./routes/carRoutes');
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 
 app.use(`${basePath}/users`, userRoutes);
 app.use(`${basePath}/auth`, authRoutes);
+app.use(`${basePath}/cars`, carRoutes);
 
 app.listen(APP_PORT, () => {
   console.log(`Server is running on port ${APP_PORT}, basePath: ${basePath}`);

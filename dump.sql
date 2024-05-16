@@ -37,9 +37,9 @@ CREATE TABLE car (
     motor VARCHAR(128) NOT NULL,
     type VARCHAR(128) NOT NULL,
     year VARCHAR(128) NOT NULL,
-    license_plage VARCHAR(128) NOT NULL,
+    license_plate VARCHAR(128) NOT NULL,
     vin VARCHAR(128) NOT NULL,
-    first_registration datetime NOT NULL,
+    first_registration date NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (users_id) REFERENCES users(id)
