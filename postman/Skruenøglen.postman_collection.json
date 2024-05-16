@@ -1,0 +1,637 @@
+{
+	"info": {
+		"_postman_id": "cc13ae7d-2a01-42cb-b55a-e6f1c0495c48",
+		"name": "Skruenøglen",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GetAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6MSwicm9sZUlkIjoxLCJpYXQiOjE3MTU4NjI1NTYsImV4cCI6MTcxNTg2MzQ1Nn0.W3ERIDVk8OM90lBzzIlQVXUBlOcnfCl0temuzMWdnyE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test\",\n    \"email\": \"test2@test.dk\",\n    \"password\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6MSwicm9sZUlkIjoxLCJpYXQiOjE3MTU4NjI2MjIsImV4cCI6MTcxNTg2MzUyMn0.2ePrjz4LCKukx0ShWcWThus9FV3VQow1exS6I5PVpBY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test test\",\n    \"email\": \"test@test.dk\",\n    \"description\": \"Hej med dig smukke\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserByID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6MSwicm9sZUlkIjoxLCJpYXQiOjE3MTU4NjI1NTYsImV4cCI6MTcxNTg2MzQ1Nn0.W3ERIDVk8OM90lBzzIlQVXUBlOcnfCl0temuzMWdnyE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6MSwicm9sZUlkIjoxLCJpYXQiOjE3MTU4NjI4NDUsImV4cCI6MTcxNTg2Mzc0NX0.BtM90cXl3mo4v1uyvXHXQU79CDP8J0CwCGL729g57V4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test.dk\",\n    \"password\": \"54321\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewPassword",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjMwODEsImV4cCI6MTcxNTg2Mzk4MX0.dAEV23k2pa96v0H1bKabP2JdL8cLzb1GB6X7iNzkWZA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"54321\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/auth/new/password/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"new",
+								"password",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Car",
+			"item": [
+				{
+					"name": "CreateCar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjY3MzYsImV4cCI6MTcxNTg2NzYzNn0.VnPDhcp4thMoEjac8FrK648qJmnn07DziXSHSF1oxpU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"brand\": \"VW\",\n    \"motor\": \"1.0\",\n    \"firstRegistration\": \"2014.01.01\",\n    \"model\": \"UP\",\n    \"type\": \"benz\",\n    \"licensePlate\": \"CP28833\",\n    \"vin\": \"JSDNFK8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllCars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCarById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/cars/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjQwMTksImV4cCI6MTcxNTg2NDkxOX0.jg0UeL0Ld_-M8czB5rI5ytIRNotRnQVMLSEhnfnm3yg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"brand\": \"VW\",\n    \"motor\": \"1.0\",\n    \"firstRegistration\": \"2014.01.01\",\n    \"model\": \"UP\",\n    \"type\": \"benz\",\n    \"licensePlate\": \"CP28833\",\n    \"vin\": \"JSDNFK8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/cars/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjQxNzUsImV4cCI6MTcxNTg2NTA3NX0.UYNugazjigfjyQhyLF_IjDmO5NPngwMwECMnQp1JEjY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/cars/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllCarsByUserId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjY0NDcsImV4cCI6MTcxNTg2NzM0N30.DQFK2qegtDoc5s30-lRZd5W_rQGVndcHoAT3voyDGMs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/cars/user/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "CreatePost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjY4ODAsImV4cCI6MTcxNTg2Nzc4MH0.z0jqhG-JxfpdiuVqAzMhXW7pX0aSkxMTw4v6ZemThlc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"title\",\n    \"description\": \"hej med dig du\",\n    \"carBrand\": \"VW\",\n    \"carMotor\": \"1.0\",\n    \"carFirstRegistration\": \"2024.10.10\",\n    \"carModel\": \"UP\",\n    \"carType\": \"benz\",\n    \"parentId\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjU5NjYsImV4cCI6MTcxNTg2Njg2Nn0.b9HYt7_EBHoePjvVOQvZp9WpX1seRUV_7G255D-QCbg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/posts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5kayIsInVpZCI6Miwicm9sZUlkIjoyLCJpYXQiOjE3MTU4NjU0MjQsImV4cCI6MTcxNTg2NjMyNH0.k_Sw--CRQrirqymcp8oXlEVptqyq-1mUiGz00O8Daiw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"titletest\",\n    \"description\": \"hej med dig du\",\n    \"carBrand\": \"VW\",\n    \"carMotor\": \"1.0\",\n    \"carFirstRegistration\": \"2024.10.10\",\n    \"carModel\": \"UP\",\n    \"carType\": \"benz\",\n    \"parentId\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8585/api/v1/posts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPostById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/posts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllPostsByUserId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8585/api/v1/posts/user/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8585",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
