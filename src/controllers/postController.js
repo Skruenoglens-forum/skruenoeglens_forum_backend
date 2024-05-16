@@ -28,14 +28,14 @@ class PostController {
     }
     
     async create(req, res){
-        const {title, user_id, description, brand, motor, modelYear, model, type, parentId}= req.body;
+        const {title, userId, description, brand, motor, modelYear, model, type, parentId}= req.body;
         try{
-            const user = await userModel.getUserById(user_id)
+            const user = await userModel.getUserById(userId)
             if (!user){
                 return res.status(400).json({error:'Bad request. User does not exist'});
             }
 
-            const newpost = await postModel.createPost(title, user_id, description, brand, motor, modelYear, model, type, parentId);
+            const newpost = await postModel.createPost(title, userId, description, brand, motor, modelYear, model, type, parentId);
             res.status(201).json(newpost);
         }
         catch(e){
@@ -51,7 +51,7 @@ class PostController {
             const decoded= auth.verifyToken(token);
 
             const isUserOwnerOfPost = await postModel.isUserOwnerOfPost(decoded.uid, postId);
-            if (!isUserOwnerOfPost && decoded.role_id !== auth.ADMIN_ROLE_ID) {
+            if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
               return res.status(400).json({ error: 'This is not your post'});
             }
 
@@ -74,7 +74,7 @@ class PostController {
             const decoded= auth.verifyToken(token);
 
             const isUserOwnerOfPost = await postModel.isUserOwnerOfPost(decoded.uid, postId);
-            if (!isUserOwnerOfPost && decoded.role_id !== auth.ADMIN_ROLE_ID) {
+            if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
               return res.status(400).json({ error: 'This is not your post'});
             }
 

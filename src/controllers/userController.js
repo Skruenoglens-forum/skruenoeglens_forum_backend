@@ -56,7 +56,7 @@ class UserController {
 
     try {
       const decoded = auth.verifyToken(token);
-      if (!decoded || (decoded.uid != userId && decoded.role_id !== auth.ADMIN_ROLE_ID)) {
+      if (!decoded || (decoded.uid != userId && decoded.roleId !== auth.ADMIN_ROLE_ID)) {
         return res.status(403).json({ error: 'You are not allowed to update other users' });
       }
 
@@ -84,7 +84,7 @@ class UserController {
     try {
       const decoded = auth.verifyToken(token);
 
-      if (!decoded || (decoded.role_id == auth.DEFAULT_ROLE_ID && decoded.uid != userId)) {
+      if (!decoded || (decoded.roleId == auth.DEFAULT_ROLE_ID && decoded.uid != userId)) {
         return res.status(403).json({ error: 'You are not allowed to delete other users' });
       }
 

@@ -20,7 +20,7 @@ class UserController {
         let data = {
             email: user.email,
             uid: user.id,
-            role_id: user.role_id
+            roleId: user.roleId
         }
     
         const token = jwt.sign(data, jwtSecretKey, {expiresIn: '15min'});
@@ -43,7 +43,7 @@ class UserController {
 
     try {
       var decoded = auth.verifyToken(token)
-      if (!decoded || (decoded.uid != userId && decoded.role_id !== auth.ADMIN_ROLE_ID)) {
+      if (!decoded || (decoded.uid != userId && decoded.roleId !== auth.ADMIN_ROLE_ID)) {
         return res.status(403).json({ error: 'You are not allowed to update other users' });
       }
 

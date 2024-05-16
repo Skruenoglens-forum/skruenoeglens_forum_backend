@@ -28,10 +28,10 @@ class CarController {
   }
 
   async create(req, res) {
-    const { user_id, brand, model, motor, type, year, license_plate, vin, first_registration } = req.body;
+    const { userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration } = req.body;
 
     try {
-      const newCar = await carModel.createCar(user_id, brand, model, motor, type, year, license_plate, vin, first_registration);
+      const newCar = await carModel.createCar(userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration);
 
       res.status(201).json(newCar);
     } catch (error) {
@@ -41,18 +41,18 @@ class CarController {
 
   async update(req, res) {
     const carId = req.params.id;
-    const { brand, model, motor, type, year, license_plate, vin, first_registration } = req.body;
+    const { brand, model, motor, type, year, licensePlate, vin, firstRegistration } = req.body;
     const token = req.header("Authorization");
 
     try {
       const decoded = auth.verifyToken(token);
 
       const isUserOwnerOfCar = await carModel.isUserOwnerOfCar(decoded.uid, carId);
-      if (!isUserOwnerOfCar && decoded.role_id !== auth.ADMIN_ROLE_ID) {
+      if (!isUserOwnerOfCar && decoded.roleId !== auth.ADMIN_ROLE_ID) {
         return res.status(400).json({ error: 'This is not your car' });
       }
 
-      const updatedCar = await carModel.updateCar(carId, brand, model, motor, type, year, license_plate, vin, first_registration);
+      const updatedCar = await carModel.updateCar(carId, brand, model, motor, type, year, licensePlate, vin, firstRegistration);
       if (!updatedCar) {
         return res.status(404).json({ error: 'Car not found' });
       }
@@ -71,7 +71,7 @@ class CarController {
       const decoded = auth.verifyToken(token);
 
       const isUserOwnerOfCar = await carModel.isUserOwnerOfCar(decoded.uid, carId);
-      if (!isUserOwnerOfCar && decoded.role_id !== auth.ADMIN_ROLE_ID) {
+      if (!isUserOwnerOfCar && decoded.roleId !== auth.ADMIN_ROLE_ID) {
         return res.status(400).json({ error: 'This is not your car' });
       }
 

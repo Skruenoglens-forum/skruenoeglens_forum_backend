@@ -49,7 +49,7 @@ class CarModel {
     try {
       const query = `
         SELECT * FROM car 
-        WHERE users_id = ? AND id = ?
+        WHERE userId = ? AND id = ?
       `;
       const [rows] = await db.query(query, [userId, carId]);
       return rows.length > 0;
@@ -59,13 +59,13 @@ class CarModel {
     }
   }
 
-  async createCar(users_id, brand, model, motor, type, year, license_plate, vin, first_registration) {
+  async createCar(userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration) {
     try {
       const query = `
-        INSERT INTO car (users_id, brand, model, motor, type, year, license_plate, vin, first_registration)
+        INSERT INTO car (userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [users_id, brand, model, motor, type, year, license_plate, vin, first_registration]);
+      const [result] = await db.query(query, [userId, brand, model, motor, type, year, licensePlate, vin, firstRegistration]);
       const insertedId = result.insertId;
       const newCar = await this.getCarById(insertedId);
       return newCar;
@@ -75,13 +75,13 @@ class CarModel {
     }
   }
 
-  async updateCar(carId, brand, model, motor, type, year, license_plate, vin, first_registration) {
+  async updateCar(carId, brand, model, motor, type, year, licensePlate, vin, firstRegistration) {
     try {
       const query = `
         UPDATE car
-        SET brand = ?, model = ? , motor = ?, type = ?, year = ?, license_plate = ?, vin = ?, first_registration = ? WHERE id = ?
+        SET brand = ?, model = ? , motor = ?, type = ?, year = ?, licensePlate = ?, vin = ?, firstRegistration = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [brand, model, motor, type, year, license_plate, vin, first_registration, carId]);
+      const [result] = await db.query(query, [brand, model, motor, type, year, licensePlate, vin, firstRegistration, carId]);
       if (result.affectedRows === 0) {
         return null;
       }

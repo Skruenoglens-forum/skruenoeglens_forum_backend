@@ -24,7 +24,7 @@ class AuthMiddleware {
     }
 
     const decoded = auth.verifyToken(token);
-    if (!decoded || decoded.role_id !== auth.ADMIN_ROLE_ID) {
+    if (!decoded || decoded.roleId !== auth.ADMIN_ROLE_ID) {
       return res.status(404).json({ message: 'You do not have permission.' });
     }
     

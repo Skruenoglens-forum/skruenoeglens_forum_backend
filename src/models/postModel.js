@@ -35,7 +35,7 @@ class PostModel {
       const query = `
         SELECT *
         FROM post
-        WHERE user_id = ?
+        WHERE userId = ?
       `;
       const [rows] = await db.query(query, [userId]);
       return rows[0];
@@ -49,7 +49,7 @@ class PostModel {
     try {
       const query = `
         SELECT * FROM post 
-        WHERE users_id = ? AND id = ?
+        WHERE userId = ? AND id = ?
       `;
       const [rows] = await db.query(query, [userId, postId]);
       return rows.length > 0;
@@ -62,7 +62,7 @@ class PostModel {
   async createPost(title, userid, description, brand, Motor, ModelYear, Model, Type, ParentId) {
     try {
       const query = `
-        INSERT INTO post (users_id, title, description, brand, model, motor, type, model_year, parent_id)
+        INSERT INTO post (userId, title, description, brand, model, motor, type, modelYear, parentId)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const [result] = await db.query(query, [userid, title, description, brand, Model, Motor, ModelYear, Type, ParentId]);
@@ -78,8 +78,8 @@ class PostModel {
   async updatePost(Postid, title, description) {
     try {
       const query = `
-        UPDATE Post
-        SET title = ?, description = ? WHERE Postid = ?
+        UPDATE post
+        SET title = ?, description = ? WHERE id = ?
       `;
       const [result] = await db.query(query, [title, description, Postid]);
       if (result.affectedRows === 0) {
@@ -96,7 +96,7 @@ class PostModel {
   async deletePost(postId) {
     try {
       const query = `
-        DELETE FROM Post WHERE postid = ?
+        DELETE FROM post WHERE id = ?
       `;
       const [result] = await db.query(query, [postId]);
       if (result.affectedRows === 0) {
