@@ -45,6 +45,21 @@ class PostModel {
     }
   }
 
+  async getAllCommentsByPostId(postId) {
+    try {
+      const query = `
+        SELECT *
+        FROM post
+        WHERE parentId = ?
+      `;
+      const [rows] = await db.query(query, [postId]);
+      return rows;
+    } catch (error) {
+      console.error('Error in getAllCommentsByPostId:', error);
+      throw error;
+    }
+  }
+
   async isUserOwnerOfPost(userId, postId) {
     try {
       const query = `

@@ -13,6 +13,9 @@ router.get('/:id', postController.getById);
 // GET all posts by UserId
 router.get('/user/:id', postController.getAllByUserId);
 
+// GET all comments by PostId
+router.get('/:id/comments', postController.getAllCommentsByPostId);
+
 // POST create a new post
 router.post('/', authMiddleware.accountAuth, postController.create);
 

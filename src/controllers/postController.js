@@ -38,6 +38,18 @@ class PostController {
           res.status(500).json({ error: 'Internal server error' });
         }
       }
+
+    async getAllCommentsByPostId(req, res) {
+        const postId = req.params.id;
+    
+        try {
+          const comments = await postModel.getAllCommentsByPostId(postId);
+    
+          res.json(comments);
+        } catch (error) {
+          res.status(500).json({ error: 'Internal server error' });
+        }
+    }
     
     async create(req, res){
         const token = req.header("Authorization");

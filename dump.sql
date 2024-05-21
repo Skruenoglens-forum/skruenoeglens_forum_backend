@@ -55,8 +55,8 @@ CREATE TABLE post (
     carMotor VARCHAR(128),
     carFirstRegistration date,
     carModel VARCHAR(128),
-    carType VARCHAR(128) NOT NULL,
-    parentId INT,
+    carType VARCHAR(128),
+    parentId INT DEFAULT 0,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(id)
