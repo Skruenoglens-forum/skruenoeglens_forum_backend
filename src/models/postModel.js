@@ -6,6 +6,7 @@ class PostModel {
       const query = `
         SELECT *
         FROM post
+        WHERE parentId IS NULL
       `;
       const [rows] = await db.query(query);
       return rows;
