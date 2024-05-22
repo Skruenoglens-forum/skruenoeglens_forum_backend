@@ -46,6 +46,21 @@ class PostModel {
     }
   }
 
+  async getAllPostsByCategoryId(categoryId) {
+    try {
+      const query = `
+        SELECT *
+        FROM post
+        WHERE categoryId = ?
+      `;
+      const [rows] = await db.query(query, [categoryId]);
+      return rows;
+    } catch (error) {
+      console.error('Error in getAllPostsByCategoryId:', error);
+      throw error;
+    }
+  }
+
   async getAllCommentsByPostId(postId) {
     try {
       const query = `

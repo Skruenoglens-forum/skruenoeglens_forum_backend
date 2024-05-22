@@ -39,6 +39,18 @@ class PostController {
         }
       }
 
+      async getAllByCategoryId(req, res) {
+        const categoryId = req.params.id;
+    
+        try {
+          const posts = await postModel.getAllPostsByCategoryId(categoryId);
+    
+          res.json(posts);
+        } catch (error) {
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      }
+
     async getAllCommentsByPostId(req, res) {
         const postId = req.params.id;
     
