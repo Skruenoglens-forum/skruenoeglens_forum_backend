@@ -4,8 +4,8 @@ class CategoryController {
     async getall(req, res)
     {
         try {
-            const posts = await postModel.getAllPosts();
-                res.json(posts);
+            const categories = await categoryModel.getAllCategories();
+                res.json(categories);
             }
             catch(e){
                 res.staus(500).json({error: 'internal server Error'})

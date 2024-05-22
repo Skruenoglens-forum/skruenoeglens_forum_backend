@@ -5,3 +5,5 @@ const router = express.Router();
 
 // GET all categories
 router.get('/', categoryController.getall);
+
+module.exports = router;
