@@ -46,6 +46,23 @@ CREATE TABLE car (
     FOREIGN KEY (userId) REFERENCES users(id)
 );
 
+CREATE TABLE category (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    categoryName VARCHAR(128) NOT NULL
+);
+
+INSERT INTO category (categoryName) VALUES 
+('Motor'),
+('Gearkasse'),
+('Bremser'),
+('Undervogn'),
+('Udstødning'),
+('Karosseri'),
+('Kølesystem'),
+('Brændstofsystem'),
+('Elektriske systemer'),
+('Andet');
+
 CREATE TABLE post (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     userId BIGINT(20) NOT NULL,
@@ -57,6 +74,7 @@ CREATE TABLE post (
     carModel VARCHAR(128),
     carType VARCHAR(128),
     parentId INT DEFAULT 0,
+    categoryId INT NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(id)

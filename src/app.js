@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const carRoutes = require('./routes/carRoutes');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 const basePath = '/api/v1';
@@ -19,6 +20,7 @@ app.use(`${basePath}/users`, userRoutes);
 app.use(`${basePath}/auth`, authRoutes);
 app.use(`${basePath}/cars`, carRoutes);
 app.use(`${basePath}/posts`, postRoutes);
+app.use(`${basePath}/categories`, categoryRoutes);
 
 app.listen(APP_PORT, () => {
   console.log(`Server is running on port ${APP_PORT}, basePath: ${basePath}`);
