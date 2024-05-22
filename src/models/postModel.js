@@ -75,13 +75,13 @@ class PostModel {
     }
   }
   
-  async createPost(userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId) {
+  async createPost(userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId) {
     try {
       const query = `
-        INSERT INTO post (userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO post (userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId]);
+      const [result] = await db.query(query, [userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId]);
       const insertedId = result.insertId;
       const newPost = await this.getPostById(insertedId);
       return newPost;
@@ -91,13 +91,13 @@ class PostModel {
     }
   }
 
-  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId) {
+  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId) {
     try {
       const query = `
         UPDATE post
-        SET title = ?, description = ?, carBrand = ?, carMotor = ?, carFirstRegistration = ?, carModel = ?, carType = ?, parentId = ? WHERE id = ?
+        SET title = ?, description = ?, carBrand = ?, carMotor = ?, carFirstRegistration = ?, carModel = ?, carType = ?, parentId = ?, categoryId = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, postId]);
+      const [result] = await db.query(query, [title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId, postId]);
       if (result.affectedRows === 0) {
         return null;
       }

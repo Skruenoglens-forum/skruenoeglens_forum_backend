@@ -53,12 +53,12 @@ class PostController {
     
     async create(req, res){
         const token = req.header("Authorization");
-        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId} = req.body;
+        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId} = req.body;
 
         try{
             const decoded = auth.verifyToken(token);
 
-            const newpost = await postModel.createPost(decoded.uid, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId);
+            const newpost = await postModel.createPost(decoded.uid, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId);
             res.status(201).json(newpost);
         }
         catch(e){
@@ -68,7 +68,7 @@ class PostController {
 
     async update(req,res){
         const postId = req.params.id;
-        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId}= req.body;
+        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId}= req.body;
         const token= req.header("Authorization");
         try{
             const decoded= auth.verifyToken(token);
@@ -78,7 +78,7 @@ class PostController {
               return res.status(400).json({ error: 'This is not your post'});
             }
 
-            const updatedPost = await postModel.updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId);
+            const updatedPost = await postModel.updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId);
             if (!updatedPost){
                 return res.status(404).json({error: 'post is not found'});
             }
