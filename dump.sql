@@ -4,18 +4,19 @@ CREATE DATABASE skruenoeglen;
 
 USE skruenoeglen;
 
-DROP TABLE IF EXISTS userRole;
+DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS car;
 DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS comment;
 DROP TABLE IF EXISTS picture;
 
-CREATE TABLE userRole (
+CREATE TABLE user_role (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    userRoleName VARCHAR(128) NOT NULL
+    name VARCHAR(128) NOT NULL
 );
 
-INSERT INTO userRole (userRoleName) VALUES 
+INSERT INTO user_role (name) VALUES 
 ('Admin'),
 ('User');
 
@@ -25,33 +26,33 @@ CREATE TABLE users (
     email VARCHAR(128) NOT NULL UNIQUE,
     password LONGTEXT NOT NULL,
     description TEXT,
-    roleId INT NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (roleId) REFERENCES userRole(id)
+    role_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (role_id) REFERENCES user_role(id)
 );
 
 CREATE TABLE car (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    userId BIGINT(20) NOT NULL,
+    user_id BIGINT(20) NOT NULL,
     brand VARCHAR(128) NOT NULL,
     motor VARCHAR(128) NOT NULL,
-    firstRegistration date NOT NULL,
+    first_registration date NOT NULL,
     model VARCHAR(128) NOT NULL,
     type VARCHAR(128) NOT NULL,
-    licensePlate VARCHAR(128) NOT NULL,
+    license_plate VARCHAR(128) NOT NULL,
     vin VARCHAR(128) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (userId) REFERENCES users(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE category (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    categoryName VARCHAR(128) NOT NULL
+    name VARCHAR(128) NOT NULL
 );
 
-INSERT INTO category (categoryName) VALUES 
+INSERT INTO category (name) VALUES 
 ('Motor'),
 ('Gearkasse'),
 ('Bremser'),
@@ -65,25 +66,36 @@ INSERT INTO category (categoryName) VALUES
 
 CREATE TABLE post (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    userId BIGINT(20) NOT NULL,
+    user_id BIGINT(20) NOT NULL,
     title VARCHAR(128) NOT NULL,
     description TEXT NOT NULL,
-    carBrand VARCHAR(128),
-    carMotor VARCHAR(128),
-    carFirstRegistration date,
-    carModel VARCHAR(128),
-    carType VARCHAR(128),
-    parentId INT DEFAULT 0,
-    categoryId INT,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (userId) REFERENCES users(id),
-    FOREIGN KEY (categoryId) REFERENCES category(id)
+    car_brand VARCHAR(128),
+    car_motor VARCHAR(128),
+    car_first_registration date,
+    car_model VARCHAR(128),
+    car_type VARCHAR(128),
+    category_id INT DEFAULT 10,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+CREATE TABLE comment (
+    id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+    description TEXT NOT NULL,
+    user_id BIGINT(20) NOT NULL,
+    post_id BIGINT(20) NOT NULL,
+    parent_id INT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE
 );
 
 CREATE TABLE picture (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    parentId INT,
+    parent_id INT,
     path VARCHAR(128),
-    parentType VARCHAR(128)
+    parent_type VARCHAR(128)
 );

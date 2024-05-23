@@ -20,7 +20,7 @@ class UserController {
         let data = {
             email: user.email,
             uid: user.id,
-            roleId: user.roleId
+            roleId: user.role_id
         }
     
         const token = jwt.sign(data, jwtSecretKey, {expiresIn: '15min'});

@@ -11,15 +11,15 @@ router.get('/', carController.getAll);
 router.get('/:id', carController.getById);
 
 // GET all cars by UserId
-router.get('/user/:id', carController.getAllByUserId);
+router.get('/users/:id', carController.getAllByUserId);
 
 // POST create a new car
-router.post('/', authMiddleware.accountAuth, carController.create);
+router.post('/', authMiddleware.userAuth, carController.create);
 
 // PUT update a car by ID
-router.put('/:id', authMiddleware.accountAuth, carController.update);
+router.put('/:id', authMiddleware.userAuth, carController.update);
 
 // DELETE delete a user by ID
-router.delete('/:id', authMiddleware.accountAuth, carController.delete);
+router.delete('/:id', authMiddleware.userAuth, carController.delete);
 
 module.exports = router;

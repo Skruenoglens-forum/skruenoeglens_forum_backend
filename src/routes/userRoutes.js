@@ -8,15 +8,15 @@ const router = express.Router();
 router.get('/', authMiddleware.adminAuth, userController.getAll);
 
 // GET specific user by ID
-router.get('/:id', authMiddleware.accountAuth, userController.getById);
+router.get('/:id', authMiddleware.userAuth, userController.getById);
 
 // POST create a new user
 router.post('/', userController.create);
 
 // PUT update a user by ID
-router.put('/:id', authMiddleware.accountAuth, userController.update);
+router.put('/:id', authMiddleware.userAuth, userController.update);
 
 // DELETE delete a user by ID
-router.delete('/:id', authMiddleware.accountAuth, userController.delete);
+router.delete('/:id', authMiddleware.userAuth, userController.delete);
 
 module.exports = router;

@@ -65,7 +65,7 @@ class UserModel {
   async createUser(name, email, hash) {
     try {
       const query = `
-        INSERT INTO users (name, email, password, roleId)
+        INSERT INTO users (name, email, password, role_id)
         VALUES (?, ?, ?, ?)
       `;
       const [result] = await db.query(query, [name, email, hash, auth.DEFAULT_ROLE_ID]);

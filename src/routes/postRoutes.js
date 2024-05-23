@@ -11,21 +11,18 @@ router.get('/', postController.getall);
 router.get('/:id', postController.getById);
 
 // GET all posts by UserId
-router.get('/user/:id', postController.getAllByUserId);
+router.get('/users/:id', postController.getAllByUserId);
 
 // GET all posts by CategoryId
-router.get('/category/:id', postController.getAllByCategoryId);
-
-// GET all comments by PostId
-router.get('/:id/comments', postController.getAllCommentsByPostId);
+router.get('/categories/:id', postController.getAllByCategoryId);
 
 // POST create a new post
-router.post('/', authMiddleware.accountAuth, postController.create);
+router.post('/', authMiddleware.userAuth, postController.create);
 
 // PUT update a post by ID
-router.put('/:id', authMiddleware.accountAuth, postController.update);
+router.put('/:id', authMiddleware.userAuth, postController.update);
 
 // DELETE delete a post by ID
-router.delete('/:id', authMiddleware.accountAuth, postController.delete);
+router.delete('/:id', authMiddleware.userAuth, postController.delete);
 
 module.exports = router;

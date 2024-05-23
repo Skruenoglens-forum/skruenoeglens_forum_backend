@@ -6,7 +6,6 @@ class PostModel {
       const query = `
         SELECT *
         FROM post
-        WHERE parentId IS NULL
       `;
       const [rows] = await db.query(query);
       return rows;
@@ -36,7 +35,7 @@ class PostModel {
       const query = `
         SELECT *
         FROM post
-        WHERE userId = ?
+        WHERE user_id = ?
       `;
       const [rows] = await db.query(query, [userId]);
       return rows;
@@ -51,7 +50,7 @@ class PostModel {
       const query = `
         SELECT *
         FROM post
-        WHERE categoryId = ?
+        WHERE category_id = ?
       `;
       const [rows] = await db.query(query, [categoryId]);
       return rows;
@@ -61,26 +60,11 @@ class PostModel {
     }
   }
 
-  async getAllCommentsByPostId(postId) {
-    try {
-      const query = `
-        SELECT *
-        FROM post
-        WHERE parentId = ?
-      `;
-      const [rows] = await db.query(query, [postId]);
-      return rows;
-    } catch (error) {
-      console.error('Error in getAllCommentsByPostId:', error);
-      throw error;
-    }
-  }
-
   async isUserOwnerOfPost(userId, postId) {
     try {
       const query = `
         SELECT * FROM post 
-        WHERE userId = ? AND id = ?
+        WHERE user_id = ? AND id = ?
       `;
       const [rows] = await db.query(query, [userId, postId]);
       return rows.length > 0;
@@ -90,13 +74,13 @@ class PostModel {
     }
   }
   
-  async createPost(userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId) {
+  async createPost(userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId) {
     try {
       const query = `
-        INSERT INTO post (userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO post (user_id, title, description, car_brand, car_motor, car_first_registration, car_model, car_type, category_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId]);
+      const [result] = await db.query(query, [userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId]);
       const insertedId = result.insertId;
       const newPost = await this.getPostById(insertedId);
       return newPost;
@@ -106,13 +90,13 @@ class PostModel {
     }
   }
 
-  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId) {
+  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId) {
     try {
       const query = `
         UPDATE post
-        SET title = ?, description = ?, carBrand = ?, carMotor = ?, carFirstRegistration = ?, carModel = ?, carType = ?, parentId = ?, categoryId = ? WHERE id = ?
+        SET title = ?, description = ?, car_brand = ?, car_motor = ?, car_first_registration = ?, car_model = ?, car_type = ?, category_id = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId, postId]);
+      const [result] = await db.query(query, [title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId, postId]);
       if (result.affectedRows === 0) {
         return null;
       }

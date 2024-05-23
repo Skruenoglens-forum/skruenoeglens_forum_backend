@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const carRoutes = require('./routes/carRoutes');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(`${basePath}/users`, userRoutes);
 app.use(`${basePath}/auth`, authRoutes);
 app.use(`${basePath}/cars`, carRoutes);
 app.use(`${basePath}/posts`, postRoutes);
+app.use(`${basePath}/comments`, commentRoutes);
 app.use(`${basePath}/categories`, categoryRoutes);
 
 app.listen(APP_PORT, () => {

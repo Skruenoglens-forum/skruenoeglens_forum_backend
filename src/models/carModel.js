@@ -35,7 +35,7 @@ class CarModel {
       const query = `
         SELECT *
         FROM car
-        WHERE userId = ?
+        WHERE user_id = ?
       `;
       const [rows] = await db.query(query, [userId]);
       return rows;
@@ -64,7 +64,7 @@ class CarModel {
     try {
       const query = `
         SELECT * FROM car 
-        WHERE userId = ? AND id = ?
+        WHERE user_id = ? AND id = ?
       `;
       const [rows] = await db.query(query, [userId, carId]);
       return rows.length > 0;
@@ -77,7 +77,7 @@ class CarModel {
   async createCar(userId, brand, motor, firstRegistration, model, type, licensePlate, vin) {
     try {
       const query = `
-        INSERT INTO car (userId, brand, motor, firstRegistration, model, type, licensePlate, vin)
+        INSERT INTO car (user_id, brand, motor, first_registration, model, type, license_plate, vin)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const [result] = await db.query(query, [userId, brand, motor, firstRegistration, model, type, licensePlate, vin]);
@@ -94,7 +94,7 @@ class CarModel {
     try {
       const query = `
         UPDATE car
-        SET brand = ?, motor = ?, firstRegistration = ?, model = ?, type = ?, licensePlate = ?, vin = ? WHERE id = ?
+        SET brand = ?, motor = ?, first_registration = ?, model = ?, type = ?, license_plate = ?, vin = ? WHERE id = ?
       `;
       const [result] = await db.query(query, [brand, motor, firstRegistration, model, type, licensePlate, vin, carId]);
       if (result.affectedRows === 0) {

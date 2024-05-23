@@ -30,17 +30,6 @@ class AuthMiddleware {
     
     next();
   }
-
-  accountAuth(req, res, next) {
-    const token = req.header("Authorization");
-    const reqUid = req.params.id;
-  
-    if (!token) {
-      return res.status(401).json({ message: 'Authentication token is required.' });
-    }   
-     
-    next();
-  }
 }
 
 module.exports = new AuthMiddleware();

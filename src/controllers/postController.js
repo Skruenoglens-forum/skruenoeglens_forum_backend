@@ -1,5 +1,4 @@
 const postModel = require('../models/postModel');
-const userModel = require('../models/userModel');
 const auth = require('../utils/auth');
 class PostController {
     async getall(req, res)
@@ -39,38 +38,26 @@ class PostController {
         }
       }
 
-      async getAllByCategoryId(req, res) {
-        const categoryId = req.params.id;
-    
-        try {
-          const posts = await postModel.getAllPostsByCategoryId(categoryId);
-    
-          res.json(posts);
-        } catch (error) {
-          res.status(500).json({ error: 'Internal server error' });
-        }
+    async getAllByCategoryId(req, res) {
+      const categoryId = req.params.id;
+  
+      try {
+        const posts = await postModel.getAllPostsByCategoryId(categoryId);
+  
+        res.json(posts);
+      } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
       }
-
-    async getAllCommentsByPostId(req, res) {
-        const postId = req.params.id;
-    
-        try {
-          const comments = await postModel.getAllCommentsByPostId(postId);
-    
-          res.json(comments);
-        } catch (error) {
-          res.status(500).json({ error: 'Internal server error' });
-        }
     }
     
     async create(req, res){
         const token = req.header("Authorization");
-        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId} = req.body;
+        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId} = req.body;
 
         try{
             const decoded = auth.verifyToken(token);
 
-            const newpost = await postModel.createPost(decoded.uid, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId);
+            const newpost = await postModel.createPost(decoded.uid, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId);
             res.status(201).json(newpost);
         }
         catch(e){
@@ -80,7 +67,7 @@ class PostController {
 
     async update(req,res){
         const postId = req.params.id;
-        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId}= req.body;
+        const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId}= req.body;
         const token= req.header("Authorization");
         try{
             const decoded= auth.verifyToken(token);
@@ -90,7 +77,7 @@ class PostController {
               return res.status(400).json({ error: 'This is not your post'});
             }
 
-            const updatedPost = await postModel.updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, parentId, categoryId);
+            const updatedPost = await postModel.updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId);
             if (!updatedPost){
                 return res.status(404).json({error: 'post is not found'});
             }
