@@ -62,13 +62,13 @@ class UserModel {
     }
   }
 
-  async createUser(name, email, hash) {
+  async createUser(name, email, hash, description, profileImagePath) {
     try {
       const query = `
-        INSERT INTO users (name, email, password, role_id)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO users (name, email, password, description, profile_image_path, role_id)
+        VALUES (?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [name, email, hash, auth.DEFAULT_ROLE_ID]);
+      const [result] = await db.query(query, [name, email, hash, description, profileImagePath, auth.DEFAULT_ROLE_ID]);
       const insertedId = result.insertId;
       const newUser = await this.getUserById(insertedId);
       return newUser;
@@ -78,13 +78,13 @@ class UserModel {
     }
   }
 
-  async updateUser(userId, name, email, description) {
+  async updateUser(userId, name, email, description, profileImagePath) {
     try {
       const query = `
         UPDATE users
-        SET name = ?, email = ?, description = ? WHERE id = ?
+        SET name = ?, email = ?, description = ?, profile_image_path = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [name, email, description, userId]);
+      const [result] = await db.query(query, [name, email, description, profileImagePath, userId]);
       if (result.affectedRows === 0) {
         return null;
       }

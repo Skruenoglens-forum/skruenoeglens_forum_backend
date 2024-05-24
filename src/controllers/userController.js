@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const auth = require('../utils/auth');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 class UserController {
   async getAll(req, res) {
@@ -31,27 +33,52 @@ class UserController {
   }
 
   async create(req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, password, description, profileImage } = req.body;
+    const base64String = profileImage ;
 
     try {
+      // CHECK IF USER EXISTS
       const user = await userModel.getUserByEmail(email);
       if (user) {
         return res.status(404).json({ error: 'Email is taken' });
       }
 
+      // SAVE IMAGE
+      let profileImagePath = ""
+
+      if (base64String) {
+        // Convert base64 string to buffer
+        const buffer = Buffer.from(base64String, 'base64');
+
+        // Define a file path and write the buffer to a file
+        const uniqueId = `${Date.now()}-${uuidv4()}`;
+        const filePath = `/Users/emilandersen/Desktop/Svendeprøve/SkruenoeglensForumFrontend/static/profileImages/${uniqueId}.png`
+        profileImagePath = `/profileImages/${uniqueId}.png`
+        fs.writeFile(filePath, buffer, (err) => {
+          if (err) {
+              console.error('Error saving image:', err);
+              return res.status(500).send('Error saving image');
+          }
+        });
+      }
+
+      // SAVE USER
       const hash = bcrypt.hashSync(password, 10);
-      const newUser = await userModel.createUser(name, email, hash);
+      const newUser = await userModel.createUser(name, email, hash, description, profileImagePath);
 
       delete newUser.password;
       res.status(201).json(newUser);
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: 'Internal server error' });
     }
   }
 
   async update(req, res) {
     const userId = req.params.id;
-    const { name, email, description } = req.body;
+    const { name, email, description, profileImage} = req.body;
+    const base64String = profileImage;
+
     const token = req.header("Authorization");
 
     try {
@@ -65,7 +92,26 @@ class UserController {
         return res.status(400).json({ error: 'Email is taken by other user' });
       }
 
-      const updatedUser = await userModel.updateUser(userId, name, email, description);
+      // SAVE IMAGE
+      let profileImagePath = ""
+
+      if (base64String) {
+        // Convert base64 string to buffer
+        const buffer = Buffer.from(base64String, 'base64');
+
+        // Define a file path and write the buffer to a file
+        const uniqueId = `${Date.now()}-${uuidv4()}`;
+        const filePath = `/Users/emilandersen/Desktop/Svendeprøve/SkruenoeglensForumFrontend/static/profileImages/${uniqueId}.png`
+        profileImagePath = `/profileImages/${uniqueId}.png`
+        fs.writeFile(filePath, buffer, (err) => {
+          if (err) {
+              console.error('Error saving image:', err);
+              return res.status(500).send('Error saving image');
+          }
+        });
+      }
+
+      const updatedUser = await userModel.updateUser(userId, name, email, description, profileImagePath);
       if (!updatedUser) {
         return res.status(404).json({ error: 'User not found' });
       }

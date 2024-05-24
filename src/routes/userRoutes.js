@@ -5,10 +5,10 @@ const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // GET all users
-router.get('/', authMiddleware.adminAuth, userController.getAll);
+router.get('/', userController.getAll);
 
 // GET specific user by ID
-router.get('/:id', authMiddleware.userAuth, userController.getById);
+router.get('/:id', userController.getById);
 
 // POST create a new user
 router.post('/', userController.create);
