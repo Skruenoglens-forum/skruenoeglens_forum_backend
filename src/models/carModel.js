@@ -74,13 +74,13 @@ class CarModel {
     }
   }
 
-  async createCar(userId, brand, motor, firstRegistration, model, type, licensePlate, vin) {
+  async createCar(userId, brand, motor, firstRegistration, model, type, licensePlate, vin, image) {
     try {
       const query = `
-        INSERT INTO car (user_id, brand, motor, first_registration, model, type, license_plate, vin)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO car (user_id, brand, motor, first_registration, model, type, license_plate, vin, image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [userId, brand, motor, firstRegistration, model, type, licensePlate, vin]);
+      const [result] = await db.query(query, [userId, brand, motor, firstRegistration, model, type, licensePlate, vin, image]);
       const insertedId = result.insertId;
       const newCar = await this.getCarById(insertedId);
       return newCar;
@@ -90,13 +90,13 @@ class CarModel {
     }
   }
 
-  async updateCar(carId, brand, motor, firstRegistration, model, type, licensePlate, vin) {
+  async updateCar(carId, brand, motor, firstRegistration, model, type, licensePlate, vin, image) {
     try {
       const query = `
         UPDATE car
-        SET brand = ?, motor = ?, first_registration = ?, model = ?, type = ?, license_plate = ?, vin = ? WHERE id = ?
+        SET brand = ?, motor = ?, first_registration = ?, model = ?, type = ?, license_plate = ?, vin = ?, image = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [brand, motor, firstRegistration, model, type, licensePlate, vin, carId]);
+      const [result] = await db.query(query, [brand, motor, firstRegistration, model, type, licensePlate, vin, image, carId]);
       if (result.affectedRows === 0) {
         return null;
       }

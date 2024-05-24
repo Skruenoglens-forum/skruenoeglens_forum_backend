@@ -4,8 +4,10 @@ class PostModel {
   async getAllPosts() {
     try {
       const query = `
-        SELECT *
+        SELECT post.*, users.name AS user_name, users.profile_image, category.name AS category_name
         FROM post
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
       `;
       const [rows] = await db.query(query);
       return rows;

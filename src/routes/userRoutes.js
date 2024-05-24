@@ -10,6 +10,9 @@ router.get('/', userController.getAll);
 // GET specific user by ID
 router.get('/:id', userController.getById);
 
+// GET profile image by ID
+router.get('/:id/image', userController.getImageById);
+
 // POST create a new user
 router.post('/', userController.create);
 

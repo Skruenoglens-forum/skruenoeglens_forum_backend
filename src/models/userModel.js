@@ -31,6 +31,21 @@ class UserModel {
     }
   }
 
+  async getImageBase64ById(userId) {
+    try {
+      const query = `
+        SELECT profile_image
+        FROM users
+        WHERE id = ?;
+      `;
+      const [rows] = await db.query(query, [userId]);
+      return rows[0];
+    } catch (error) {
+      console.error('Error in getImageBase64ById:', error);
+      throw error;
+    }
+  }
+
   async getUserByEmail(email) {
     try {
       const query = `
@@ -62,13 +77,13 @@ class UserModel {
     }
   }
 
-  async createUser(name, email, hash, description, profileImagePath) {
+  async createUser(name, email, hash, description, profileImage) {
     try {
       const query = `
-        INSERT INTO users (name, email, password, description, profile_image_path, role_id)
+        INSERT INTO users (name, email, password, description, profile_image, role_id)
         VALUES (?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [name, email, hash, description, profileImagePath, auth.DEFAULT_ROLE_ID]);
+      const [result] = await db.query(query, [name, email, hash, description, profileImage, auth.DEFAULT_ROLE_ID]);
       const insertedId = result.insertId;
       const newUser = await this.getUserById(insertedId);
       return newUser;
@@ -78,13 +93,13 @@ class UserModel {
     }
   }
 
-  async updateUser(userId, name, email, description, profileImagePath) {
+  async updateUser(userId, name, email, description, profileImage) {
     try {
       const query = `
         UPDATE users
-        SET name = ?, email = ?, description = ?, profile_image_path = ? WHERE id = ?
+        SET name = ?, email = ?, description = ?, profile_image = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [name, email, description, profileImagePath, userId]);
+      const [result] = await db.query(query, [name, email, description, profileImage, userId]);
       if (result.affectedRows === 0) {
         return null;
       }
