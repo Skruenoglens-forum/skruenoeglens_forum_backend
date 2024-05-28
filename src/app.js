@@ -15,7 +15,7 @@ const APP_PORT = config.APP_PORT || 8080;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false })); // create application/x-www-form-urlencoded parser
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.json());
 
 app.use(`${basePath}/users`, userRoutes);
 app.use(`${basePath}/auth`, authRoutes);

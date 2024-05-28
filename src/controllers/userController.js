@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const auth = require('../utils/auth');
+const path = require('path');
 
 class UserController {
   async getAll(req, res) {
@@ -34,32 +35,22 @@ class UserController {
     const userId = req.params.id;
 
     try {
-        const image = await userModel.getImageBase64ById(userId);
+        const image = await userModel.getImage(userId);
 
-        const imageResponses = [];
+        const imagePath = path.join(__dirname, `../../uploads/${image.profile_image}`)
 
-        for (let i = 0; i < 5; i++) {
-          const imgBuffer = Buffer.from(image.profile_image, 'base64');
-
-          imageResponses.push({
-              contentType: 'image/png', // or appropriate content type
-              contentLength: imgBuffer.length,
-              data: imgBuffer
-          });
-        }
-
-        // Respond with multiple images
-        res.status(200).json(imageResponses);
+        res.status(200).sendFile(imagePath);
     } catch (error) {
         console.log("Error:", error);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
 
-
   async create(req, res) {
-    const { name, email, password, description, profileImage } = req.body;
-    
+    const { name, email, password, description } = req.body;
+
+    const filename = req.file.filename;
+        
     try {
       // CHECK IF USER EXISTS
       const user = await userModel.getUserByEmail(email);
@@ -69,7 +60,7 @@ class UserController {
 
       // SAVE USER
       const hash = bcrypt.hashSync(password, 10);
-      const newUser = await userModel.createUser(name, email, hash, description, profileImage);
+      const newUser = await userModel.createUser(name, email, hash, description, filename);
 
       delete newUser.password;
       res.status(201).json(newUser);
@@ -81,11 +72,14 @@ class UserController {
 
   async update(req, res) {
     const userId = req.params.id;
-    const { name, email, description, profileImage} = req.body;
+    const { name, email, description} = req.body;
+    const filename = req.file.filename;
 
     const token = req.header("Authorization");
 
     try {
+      // TODO: DELETE OLD PROFILE IMAGE
+
       const decoded = auth.verifyToken(token);
       if (!decoded || (decoded.uid != userId && decoded.roleId !== auth.ADMIN_ROLE_ID)) {
         return res.status(403).json({ error: 'You are not allowed to update other users' });
@@ -96,7 +90,7 @@ class UserController {
         return res.status(400).json({ error: 'Email is taken by other user' });
       }
 
-      const updatedUser = await userModel.updateUser(userId, name, email, description, profileImage);
+      const updatedUser = await userModel.updateUser(userId, name, email, description, filename);
       if (!updatedUser) {
         return res.status(404).json({ error: 'User not found' });
       }

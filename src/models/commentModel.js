@@ -33,7 +33,7 @@ class commentModel {
   async getAllCommentsByPostId(postId) {
     try {
       const query = `
-        SELECT comment.*, users.name, users.profile_image
+        SELECT comment.*, users.name, users.id AS user_id
         FROM comment
         JOIN users ON comment.user_id = users.id
         WHERE comment.post_id = ?;

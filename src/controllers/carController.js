@@ -1,5 +1,6 @@
 const carModel = require('../models/carModel');
 const auth = require('../utils/auth');
+const path = require('path');
 
 class CarController {
   async getAll(req, res) {
@@ -39,14 +40,31 @@ class CarController {
     }
   }
 
+  async getImageById(req, res) {
+    const carId = req.params.id;
+
+    try {
+        const image = await carModel.getImage(carId);
+
+        const imagePath = path.join(__dirname, `../../uploads/${image.image}`)
+
+        res.status(200).sendFile(imagePath);
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
   async create(req, res) {
     const token = req.header("Authorization");
-    const { brand, motor, firstRegistration, model, type, licensePlate, vin, image } = req.body;
+    const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;
+    
+    const filename = req.file.filename;
 
     try {
       const decoded = auth.verifyToken(token);
 
-      const newCar = await carModel.createCar(decoded.uid, brand, motor, firstRegistration, model, type, licensePlate, vin, image);
+      const newCar = await carModel.createCar(decoded.uid, brand, motor, firstRegistration, model, type, licensePlate, vin, filename);
 
       res.status(201).json(newCar);
     } catch (error) {
@@ -56,8 +74,9 @@ class CarController {
 
   async update(req, res) {
     const carId = req.params.id;
-    const { brand, motor, firstRegistration, model, type, licensePlate, vin, image } = req.body;
+    const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;
     const token = req.header("Authorization");
+    const filename = req.file.filename;
 
     try {
       const decoded = auth.verifyToken(token);
@@ -67,7 +86,7 @@ class CarController {
         return res.status(400).json({ error: 'This is not your car' });
       }
 
-      const updatedCar = await carModel.updateCar(carId, brand, motor, firstRegistration, model, type, licensePlate, vin, image);
+      const updatedCar = await carModel.updateCar(carId, brand, motor, firstRegistration, model, type, licensePlate, vin, filename);
       if (!updatedCar) {
         return res.status(404).json({ error: 'Car not found' });
       }
