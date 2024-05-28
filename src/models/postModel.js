@@ -50,8 +50,10 @@ class PostModel {
   async getAllPostsByCategoryId(categoryId) {
     try {
       const query = `
-        SELECT *
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
         FROM post
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
         WHERE category_id = ?
       `;
       const [rows] = await db.query(query, [categoryId]);

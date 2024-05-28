@@ -49,7 +49,11 @@ class UserController {
   async create(req, res) {
     const { name, email, password, description } = req.body;
 
-    const filename = req.file.filename;
+    let filename = ""
+
+    if (req.file) {
+      filename = req.file.filename;
+    } 
         
     try {
       // CHECK IF USER EXISTS
@@ -73,7 +77,12 @@ class UserController {
   async update(req, res) {
     const userId = req.params.id;
     const { name, email, description} = req.body;
-    const filename = req.file.filename;
+
+    let filename = ""
+
+    if (req.file) {
+      filename = req.file.filename;
+    } 
 
     const token = req.header("Authorization");
 
