@@ -1,6 +1,7 @@
 const carModel = require('../models/carModel');
 const auth = require('../utils/auth');
 const path = require('path');
+const fs = require('fs');
 
 class CarController {
   async getAll(req, res) {
@@ -47,6 +48,13 @@ class CarController {
         const image = await carModel.getImage(carId);
 
         const imagePath = path.join(__dirname, `../../uploads/${image.image}`)
+        fs.access(imagePath, fs.constants.F_OK, (err) => {
+          if (err) {
+              return res.status(200).sendFile(path.join(__dirname, `../../uploads/default/car.png`));
+          }
+
+          res.status(200).sendFile(imagePath);
+        });
 
         res.status(200).sendFile(imagePath);
     } catch (error) {
@@ -59,7 +67,11 @@ class CarController {
     const token = req.header("Authorization");
     const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;
     
-    const filename = req.file.filename;
+    let filename = "default/car.png"
+
+    if (req.file) {
+      filename = req.file.filename;
+    }
 
     try {
       const decoded = auth.verifyToken(token);
@@ -76,7 +88,12 @@ class CarController {
     const carId = req.params.id;
     const { brand, motor, firstRegistration, model, type, licensePlate, vin } = req.body;
     const token = req.header("Authorization");
-    const filename = req.file.filename;
+  
+    let filename = "default/car.png"
+
+    if (req.file) {
+      filename = req.file.filename;
+    }
 
     try {
       const decoded = auth.verifyToken(token);

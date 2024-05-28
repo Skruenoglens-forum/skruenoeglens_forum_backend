@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const auth = require('../utils/auth');
 const path = require('path');
+const fs = require('fs');
 
 class UserController {
   async getAll(req, res) {
@@ -39,21 +40,28 @@ class UserController {
 
         const imagePath = path.join(__dirname, `../../uploads/${image.profile_image}`)
 
-        res.status(200).sendFile(imagePath);
+        fs.access(imagePath, fs.constants.F_OK, (err) => {
+          if (err) {
+              return res.status(200).sendFile(path.join(__dirname, `../../uploads/default/user.png`));
+          }
+
+          res.status(200).sendFile(imagePath);
+        });
     } catch (error) {
         console.log("Error:", error);
         res.status(500).json({ error: 'Internal server error' });
     }
-}
+  }
 
   async create(req, res) {
     const { name, email, password, description } = req.body;
 
-    let filename = ""
+    let filename = "default/user.png"
 
     if (req.file) {
       filename = req.file.filename;
-    } 
+    }
+
         
     try {
       // CHECK IF USER EXISTS
@@ -78,11 +86,11 @@ class UserController {
     const userId = req.params.id;
     const { name, email, description} = req.body;
 
-    let filename = ""
+    let filename = "default/user.png"
 
     if (req.file) {
       filename = req.file.filename;
-    } 
+    }
 
     const token = req.header("Authorization");
 

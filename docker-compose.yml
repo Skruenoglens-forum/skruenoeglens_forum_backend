@@ -5,3 +5,8 @@ services:
     image: skruenoeglensbackendapi:latest
     ports:
       - '8585:8585'
+    volumes:
+      - uploads:/usr/src/app/uploads
+
+volumes:
+  uploads:

@@ -82,18 +82,17 @@ class CommentController {
         // CommentIds postID skal ejes af brugeren der vil sætte solution
 
         const commentId = req.params.id;
+        const isSolution = req.params.isSolution;
         const token= req.header("Authorization");
         try{
             const decoded= auth.verifyToken(token);
 
-            const isUserOwnerOfPost = await commentModel.isUserOwnerOfPost(decoded.uid, commentId);
+            const isUserOwnerOfPost = await commentModel.isUserOwnerOfPost(commentId, decoded.uid);
             if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
               return res.status(400).json({ error: 'This is not your comment'});
             }
 
-            console.log(isUserOwnerOfPost)
-
-            const markCommentAsSolution = await commentModel.markCommentAsSolution(commentId);
+            const markCommentAsSolution = await commentModel.markCommentAsSolution(commentId, isSolution);
             if (!markCommentAsSolution){
                 return res.status(404).json({error: 'comment is not found'});
             }

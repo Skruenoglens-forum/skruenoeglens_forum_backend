@@ -24,7 +24,7 @@ router.get('/:id/image', carController.getImageById);
 router.post('/', authMiddleware.userAuth, upload.single('file'), carController.create);
 
 // PUT update a car by ID
-router.put('/:id', authMiddleware.userAuth, carController.update);
+router.put('/:id', authMiddleware.userAuth, upload.single('file'), carController.update);
 
 // DELETE delete a user by ID
 router.delete('/:id', authMiddleware.userAuth, carController.delete);

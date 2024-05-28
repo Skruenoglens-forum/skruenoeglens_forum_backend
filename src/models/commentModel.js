@@ -94,13 +94,13 @@ class commentModel {
     }
   }
 
-  async markCommentAsSolution(commentId) {
+  async markCommentAsSolution(commentId, isSolution) {
     try {
       const query = `
         UPDATE comment
-        SET solution = 1 WHERE id = ?
+        SET solution = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [commentId]);
+      const [result] = await db.query(query, [isSolution, commentId]);
       if (result.affectedRows === 0) {
         return null;
       }
