@@ -63,10 +63,10 @@ class commentModel {
   async createComment(description, userId, postId, parentId) {
     try {
       const query = `
-        INSERT INTO comment (description, user_id, post_id, parent_id)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO comment (description, solution, user_id, post_id, parent_id)
+        VALUES (?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [description, userId, postId, parentId]);
+      const [result] = await db.query(query, [description, 0, userId, postId, parentId]);
       const insertedId = result.insertId;
       const newPost = await this.getCommentById(insertedId);
       return newPost;
@@ -90,6 +90,40 @@ class commentModel {
       return updatedComment ;
     } catch (error) {
       console.error('Error in updateComment:', error);
+      throw error;
+    }
+  }
+
+  async markCommentAsSolution(commentId) {
+    try {
+      const query = `
+        UPDATE comment
+        SET solution = 1 WHERE id = ?
+      `;
+      const [result] = await db.query(query, [commentId]);
+      if (result.affectedRows === 0) {
+        return null;
+      }
+      const updatedComment = await this.getCommentById(commentId)
+      return updatedComment ;
+    } catch (error) {
+      console.error('Error in markCommentAsSolution:', error);
+      throw error;
+    }
+  }
+
+  async isUserOwnerOfPost(commentId, userId) {
+    try {
+      const query = `
+        SELECT comment.id AS comment_id, post.id AS post_id, post.user_id AS post_user_id
+        FROM comment
+        JOIN post ON comment.post_id = post.id
+        WHERE comment.id = ? AND post.user_id = ?
+      `;
+      const [rows] = await db.query(query, [commentId, userId]);
+      return rows.length > 0;
+    } catch (error) {
+      console.error('Error in isUserOwnerOfPost:', error);
       throw error;
     }
   }

@@ -19,6 +19,9 @@ router.post('/posts/:id', authMiddleware.userAuth, commentController.create);
 // PUT update a comment by ID
 router.put('/:id', authMiddleware.userAuth, commentController.update);
 
+// PUT mark comment as solution by ID
+router.put('/:id/solution', authMiddleware.userAuth, commentController.solution);
+
 // DELETE delete a comment by ID
 router.delete('/:id', authMiddleware.userAuth, commentController.delete);
 

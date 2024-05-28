@@ -78,6 +78,32 @@ class CommentController {
         }
     }
 
+    async solution(req,res){
+        // CommentIds postID skal ejes af brugeren der vil sætte solution
+
+        const commentId = req.params.id;
+        const token= req.header("Authorization");
+        try{
+            const decoded= auth.verifyToken(token);
+
+            const isUserOwnerOfPost = await commentModel.isUserOwnerOfPost(decoded.uid, commentId);
+            if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
+              return res.status(400).json({ error: 'This is not your comment'});
+            }
+
+            console.log(isUserOwnerOfPost)
+
+            const markCommentAsSolution = await commentModel.markCommentAsSolution(commentId);
+            if (!markCommentAsSolution){
+                return res.status(404).json({error: 'comment is not found'});
+            }
+            res.json(markCommentAsSolution);
+        }
+        catch(e){
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+
     async delete(req, res){
         const commentId = req.params.id;
   

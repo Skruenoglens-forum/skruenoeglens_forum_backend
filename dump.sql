@@ -86,6 +86,7 @@ CREATE TABLE post (
 CREATE TABLE comment (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     description TEXT NOT NULL,
+    solution TINYINT NOT NULL,
     user_id BIGINT(20) NOT NULL,
     post_id BIGINT(20) NOT NULL,
     parent_id INT DEFAULT NULL,
