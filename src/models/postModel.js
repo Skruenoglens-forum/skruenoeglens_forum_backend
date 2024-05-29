@@ -64,6 +64,35 @@ class PostModel {
     }
   }
 
+  async getAllImagesByPostId(postId) {
+    try {
+      const query = `
+        SELECT * FROM post_image
+        WHERE post_id = ?
+      `;
+      const [rows] = await db.query(query, [postId]);
+      return rows;
+    } catch (error) {
+      console.error('Error in getAllImagesByPostId:', error);
+      throw error;
+    }
+  }
+
+  async getImage(postImageId) {
+    try {
+      const query = `
+        SELECT image
+        FROM post_image
+        WHERE id = ?;
+      `;
+      const [rows] = await db.query(query, [postImageId]);
+      return rows[0];
+    } catch (error) {
+      console.error('Error in getImage:', error);
+      throw error;
+    }
+  }
+
   async isUserOwnerOfPost(userId, postId) {
     try {
       const query = `
@@ -94,7 +123,32 @@ class PostModel {
     }
   }
 
-  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId) {
+  async removeImages(postId) {
+    try {
+      const query = `
+        DELETE FROM post_image WHERE post_id = ?
+      `;
+      await db.query(query, [postId]);
+    } catch (error) {
+      console.error('Error in removeImages:', error);
+      throw error;
+    }
+  }
+
+  async saveImage(filename, postId) {
+    try {
+      const query = `
+        INSERT INTO post_image (image, post_id)
+        VALUES (?, ?)
+      `;
+      await db.query(query, [filename, postId]);
+    } catch (error) {
+      console.error('Error in createPost:', error);
+      throw error;
+    }
+  }
+
+  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId, files) {
     try {
       const query = `
         UPDATE post

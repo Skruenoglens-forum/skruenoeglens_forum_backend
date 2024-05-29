@@ -96,9 +96,9 @@ CREATE TABLE comment (
     FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE
 );
 
-CREATE TABLE picture (
+CREATE TABLE post_image (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    parent_id INT,
-    path VARCHAR(128),
-    parent_type VARCHAR(128)
+    image VARCHAR(128),
+    post_id BIGINT(20) NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE
 );

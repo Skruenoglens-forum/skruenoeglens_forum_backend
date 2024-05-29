@@ -1,5 +1,8 @@
 const postModel = require('../models/postModel');
 const auth = require('../utils/auth');
+const path = require('path');
+const fs = require('fs');
+
 class PostController {
     async getall(req, res)
     {
@@ -49,6 +52,40 @@ class PostController {
         res.status(500).json({ error: 'Internal server error' });
       }
     }
+
+    async getAllImagesById(req, res) {
+        const postId = req.params.id;
+    
+        try {
+          const images = await postModel.getAllImagesByPostId(postId);
+    
+          res.json(images);
+        } catch (error) {
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      }
+
+    async getImageByImageId(req, res) {
+        const postImageId = req.params.id;
+    
+        try {
+            const image = await postModel.getImage(postImageId);
+    
+            const imagePath = path.join(__dirname, `../../uploads/${image.image}`)
+            fs.access(imagePath, fs.constants.F_OK, (err) => {
+              if (err) {
+                  return res.status(200).sendFile(path.join(__dirname, `../../uploads/default/post.png`));
+              }
+    
+              res.status(200).sendFile(imagePath);
+            });
+    
+            res.status(200).sendFile(imagePath);
+        } catch (error) {
+            console.log("Error:", error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
     
     async create(req, res){
         const token = req.header("Authorization");
@@ -57,7 +94,16 @@ class PostController {
         try{
             const decoded = auth.verifyToken(token);
 
+            // req.files is an array of files
+            const files = req.files;
+
             const newpost = await postModel.createPost(decoded.uid, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId);
+
+            // Save images associated with the post
+            for (const file of files) {
+                await postModel.saveImage(file.filename, newpost.id);
+            }
+
             res.status(201).json(newpost);
         }
         catch(e){
@@ -68,6 +114,7 @@ class PostController {
     async update(req,res){
         const postId = req.params.id;
         const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId}= req.body;
+
         const token= req.header("Authorization");
         try{
             const decoded= auth.verifyToken(token);
@@ -77,10 +124,22 @@ class PostController {
               return res.status(400).json({ error: 'This is not your post'});
             }
 
+            // req.files is an array of files
+            const files = req.files;
+
             const updatedPost = await postModel.updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId);
             if (!updatedPost){
                 return res.status(404).json({error: 'post is not found'});
             }
+
+            // Remvoe old images
+            await postModel.removeImages(updatedPost.id)
+
+            // Save images associated with the post
+            for (const file of files) {
+                await postModel.saveImage(file.filename, updatedPost.id);
+            }
+
             res.json(updatedPost);
         }
         catch(e){
