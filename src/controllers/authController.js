@@ -23,7 +23,7 @@ class UserController {
             roleId: user.role_id
         }
     
-        const token = jwt.sign(data, jwtSecretKey, {expiresIn: '15min'});
+        const token = jwt.sign(data, jwtSecretKey, {expiresIn: '60min'});
       
         return res.json({
           token: token
