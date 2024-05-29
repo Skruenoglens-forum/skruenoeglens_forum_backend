@@ -63,6 +63,23 @@ class PostModel {
       throw error;
     }
   }
+  async getAllPostsByCategoryIdAndLicensePlate(categoryId,brandNavn,modelNavn){
+    try{
+      const query =`
+      SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, 
+        FROM post
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
+        WHERE category_id = ? AND (car_brand= ? OR car_model ?)`
+    
+    const [rows] =await db.query(query, [categoryId,brandNavn, modelNavn])
+    return rows
+    }
+    catch(error){
+      console.error('Error in getAllPostsByCategoryIdAndLicensePlate')
+      throw error
+    }
+  }
 
   async isUserOwnerOfPost(userId, postId) {
     try {
