@@ -5,8 +5,9 @@ class UserModel {
   async getAllUsers() {
     try {
       const query = `
-        SELECT *
+        SELECT users.*, user_role.name AS role_name
         FROM users
+        JOIN user_role ON users.role_id = user_role.id;
       `;
       const [rows] = await db.query(query);
       return rows;
