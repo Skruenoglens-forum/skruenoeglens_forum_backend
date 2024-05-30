@@ -20,9 +20,11 @@ class PostModel {
   async getPostById(postId) {
     try {
       const query = `
-        SELECT *
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
         FROM post
-        WHERE id = ?;
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
+        WHERE post.id = ?;
       `;
       const [rows] = await db.query(query, [postId]);
       return rows[0];
@@ -35,8 +37,10 @@ class PostModel {
   async getAllPostsByUserId(userId) {
     try {
       const query = `
-        SELECT *
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
         FROM post
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
         WHERE user_id = ?
       `;
       const [rows] = await db.query(query, [userId]);
@@ -61,23 +65,6 @@ class PostModel {
     } catch (error) {
       console.error('Error in getAllPostsByCategoryId:', error);
       throw error;
-    }
-  }
-  async getAllPostsByCategoryIdAndLicensePlate(categoryId,brandNavn,modelNavn){
-    try{
-      const query =`
-      SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, 
-        FROM post
-        JOIN users ON post.user_id = users.id
-        JOIN category ON post.category_id = category.id
-        WHERE category_id = ? AND (car_brand= ? OR car_model ?)`
-    
-    const [rows] =await db.query(query, [categoryId,brandNavn, modelNavn])
-    return rows
-    }
-    catch(error){
-      console.error('Error in getAllPostsByCategoryIdAndLicensePlate')
-      throw error
     }
   }
 

@@ -86,18 +86,7 @@ class PostController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
-    
-    async getAllByCategoryIdAndLicensePlate(req, res) {
-        const {categoryId,Brand, Model } = req.params.id;
-    
-        try {
-          const posts = await postModel.getAllPostsByCategoryIdAndLicensePlate(categoryId,Brand,Model );
-          res.json(posts);
-        } catch (error) {
-          res.status(500).json({ error: 'Internal server error' });
-        }
-      }
-      
+          
     async create(req, res){
         const token = req.header("Authorization");
         const {title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId} = req.body;
