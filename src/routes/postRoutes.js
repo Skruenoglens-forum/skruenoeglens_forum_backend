@@ -19,6 +19,11 @@ router.get('/users/:id', postController.getAllByUserId);
 
 // GET all posts by CategoryId
 router.get('/categories/:id', postController.getAllByCategoryId);
+//GET all posts by CategoryId and Car
+
+router.get('/categories/:id/:brand/:model',postController.getAllByCategoryIdAndLicensePlate)
+
+router.get('/cars/:brand/:model', postController.getAllByLicensePlate)
 
 // GET postImageId by postId
 router.get('/:id/images', postController.getAllImagesById);

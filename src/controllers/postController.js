@@ -75,6 +75,31 @@ class PostController {
     }
   }
 
+  async getAllByCategoryIdAndLicensePlate(req, res) {
+    const categoryId = req.params.id;
+    const Brand = req.params.brand;
+    const Model = req.params.model;
+
+    try {
+      const posts = await postModel.getAllPostsByCategoryIdAndLicensePlate(categoryId,Brand,Model );
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  async getAllByLicensePlate(req, res) {
+    const Brand = req.params.brand;
+    const Model = req.params.Model;
+
+    try {
+      const posts = await postModel.getAllPostsByLicensPlate(Brand, Model );
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
   async getAllImagesById(req, res) {
     const postId = req.params.id;
 

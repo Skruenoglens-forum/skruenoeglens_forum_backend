@@ -76,6 +76,44 @@ class PostModel {
     }
   }
 
+  async getAllPostsByCategoryIdAndLicensePlate(categoryId, brandNavn, modelNavn){
+    try{
+      const query =`
+      SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name 
+        FROM post
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
+        WHERE category_id = ? AND (car_brand = ? OR car_model = ?)`
+
+    const [rows] =await db.query(query, [categoryId, brandNavn, modelNavn])
+    return rows
+    }
+    catch(error){
+      console.error('Error in getAllPostsByCategoryIdAndLicensePlate')
+      console.error(error)
+      throw error
+    }
+  }
+  async getAllPostsByLicensPlate(brandNavn,modelNavn){
+
+    try {
+      const query = `
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS image_ids
+        FROM post
+        JOIN users ON post.user_id = users.id
+        JOIN category ON post.category_id = category.id
+        LEFT JOIN post_image ON post.id = post_image.post_id
+        WHERE car_brand = ? OR car_model = ?
+        GROUP BY post.id, users.id, category.id;
+      `;
+      const [rows] = await db.query(query,[brandNavn, modelNavn]);
+      return rows;
+    } catch (error) {
+      console.error('Error in getAllPostsByLicenseplate:', error);
+      throw error;
+    }
+  }
+
   async getAllImagesByPostId(postId) {
     try {
       const query = `
