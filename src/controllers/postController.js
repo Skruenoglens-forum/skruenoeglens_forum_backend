@@ -92,11 +92,22 @@ class PostController {
 
   async getAllByCategoryIdAndLicensePlate(req, res) {
     const categoryId = req.params.id;
-    const Brand = req.params.brand;
-    const Model = req.params.model;
+    const carBrand = req.params.brand;
+    const carModel = req.params.model;
 
     try {
-      const posts = await postModel.getAllPostsByCategoryIdAndLicensePlate(categoryId,Brand,Model );
+      const posts = await postModel.getAllPostsByCategoryIdAndLicensePlate(categoryId, carBrand, carModel);
+
+      posts.forEach((post) => {
+        if (post.image_ids) {
+          post.image_ids = post.image_ids
+            .split(",")
+            .map((id) => parseInt(id, 10));
+        } else {
+          post.image_ids = [];
+        }
+      });
+
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
@@ -104,11 +115,22 @@ class PostController {
   }
 
   async getAllByLicensePlate(req, res) {
-    const Brand = req.params.brand;
-    const Model = req.params.Model;
+    const carBrand = req.params.brand;
+    const carModel = req.params.Model;
 
     try {
-      const posts = await postModel.getAllPostsByLicensPlate(Brand, Model );
+      const posts = await postModel.getAllPostsByLicensPlate(carBrand, carModel);
+
+      posts.forEach((post) => {
+        if (post.image_ids) {
+          post.image_ids = post.image_ids
+            .split(",")
+            .map((id) => parseInt(id, 10));
+        } else {
+          post.image_ids = [];
+        }
+      });
+
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });

@@ -1,4 +1,4 @@
-const db = require('../utils/db');
+const db = require("../utils/db");
 
 class PostModel {
   async getAllPosts() {
@@ -16,7 +16,7 @@ class PostModel {
       const [rows] = await db.query(query);
       return rows;
     } catch (error) {
-      console.error('Error in getAllPosts:', error);
+      console.error("Error in getAllPosts:", error);
       throw error;
     }
   }
@@ -37,7 +37,7 @@ class PostModel {
       const [rows] = await db.query(query, [postId]);
       return rows[0];
     } catch (error) {
-      console.error('Error in getPostById:', error);
+      console.error("Error in getPostById:", error);
       throw error;
     }
   }
@@ -58,7 +58,7 @@ class PostModel {
       const [rows] = await db.query(query, [userId]);
       return rows;
     } catch (error) {
-      console.error('Error in getAllPostsByUserId:', error);
+      console.error("Error in getAllPostsByUserId:", error);
       throw error;
     }
   }
@@ -79,45 +79,49 @@ class PostModel {
       const [rows] = await db.query(query, [categoryId]);
       return rows;
     } catch (error) {
-      console.error('Error in getAllPostsByCategoryId:', error);
+      console.error("Error in getAllPostsByCategoryId:", error);
       throw error;
     }
   }
 
-  async getAllPostsByCategoryIdAndLicensePlate(categoryId, brandNavn, modelNavn){
-    try{
-      const query =`
-      SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name 
+  async getAllPostsByCategoryIdAndLicensePlate(categoryId, carBrand, carModel) {
+    try {
+      const query = `        
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
-        WHERE category_id = ? AND (car_brand = ? OR car_model = ?)`
-
-    const [rows] =await db.query(query, [categoryId, brandNavn, modelNavn])
-    return rows
-    }
-    catch(error){
-      console.error('Error in getAllPostsByCategoryIdAndLicensePlate')
-      console.error(error)
-      throw error
+        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
+        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
+        LEFT JOIN post_image ON post.id = post_image.post_id
+        WHERE category_id = ? AND (car_brand = ? OR car_model = ?)
+        GROUP BY post.id, users.id, category.id;
+      `;
+      const [rows] = await db.query(query, [categoryId, carBrand, carModel]);
+      return rows;
+    } catch (error) {
+      console.error("Error in getAllPostsByCategoryIdAndLicensePlate");
+      console.error(error);
+      throw error;
     }
   }
-  async getAllPostsByLicensPlate(brandNavn,modelNavn){
-
+  async getAllPostsByLicensPlate(carBrand, carModel) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS image_ids
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
+        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
         LEFT JOIN post_image ON post.id = post_image.post_id
         WHERE car_brand = ? OR car_model = ?
         GROUP BY post.id, users.id, category.id;
       `;
-      const [rows] = await db.query(query,[brandNavn, modelNavn]);
+      const [rows] = await db.query(query, [carBrand, carModel]);
       return rows;
     } catch (error) {
-      console.error('Error in getAllPostsByLicenseplate:', error);
+      console.error("Error in getAllPostsByLicenseplate:", error);
       throw error;
     }
   }
@@ -131,7 +135,7 @@ class PostModel {
       const [rows] = await db.query(query, [postId]);
       return rows;
     } catch (error) {
-      console.error('Error in getAllImagesByPostId:', error);
+      console.error("Error in getAllImagesByPostId:", error);
       throw error;
     }
   }
@@ -146,7 +150,7 @@ class PostModel {
       const [rows] = await db.query(query, [postImageId]);
       return rows[0];
     } catch (error) {
-      console.error('Error in getImage:', error);
+      console.error("Error in getImage:", error);
       throw error;
     }
   }
@@ -160,23 +164,43 @@ class PostModel {
       const [rows] = await db.query(query, [userId, postId]);
       return rows.length > 0;
     } catch (error) {
-      console.error('Error in isUserOwnerOfPost:', error);
+      console.error("Error in isUserOwnerOfPost:", error);
       throw error;
     }
   }
-  
-  async createPost(userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId) {
+
+  async createPost(
+    userId,
+    title,
+    description,
+    carBrand,
+    carMotor,
+    carFirstRegistration,
+    carModel,
+    carType,
+    categoryId
+  ) {
     try {
       const query = `
         INSERT INTO post (user_id, title, description, car_brand, car_motor, car_first_registration, car_model, car_type, category_id)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const [result] = await db.query(query, [userId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId]);
+      const [result] = await db.query(query, [
+        userId,
+        title,
+        description,
+        carBrand,
+        carMotor,
+        carFirstRegistration,
+        carModel,
+        carType,
+        categoryId,
+      ]);
       const insertedId = result.insertId;
       const newPost = await this.getPostById(insertedId);
       return newPost;
     } catch (error) {
-      console.error('Error in createPost:', error);
+      console.error("Error in createPost:", error);
       throw error;
     }
   }
@@ -188,7 +212,7 @@ class PostModel {
       `;
       await db.query(query, [postId]);
     } catch (error) {
-      console.error('Error in removeImages:', error);
+      console.error("Error in removeImages:", error);
       throw error;
     }
   }
@@ -201,25 +225,46 @@ class PostModel {
       `;
       await db.query(query, [filename, postId]);
     } catch (error) {
-      console.error('Error in createPost:', error);
+      console.error("Error in createPost:", error);
       throw error;
     }
   }
 
-  async updatePost(postId, title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId, files) {
+  async updatePost(
+    postId,
+    title,
+    description,
+    carBrand,
+    carMotor,
+    carFirstRegistration,
+    carModel,
+    carType,
+    categoryId,
+    files
+  ) {
     try {
       const query = `
         UPDATE post
         SET title = ?, description = ?, car_brand = ?, car_motor = ?, car_first_registration = ?, car_model = ?, car_type = ?, category_id = ? WHERE id = ?
       `;
-      const [result] = await db.query(query, [title, description, carBrand, carMotor, carFirstRegistration, carModel, carType, categoryId, postId]);
+      const [result] = await db.query(query, [
+        title,
+        description,
+        carBrand,
+        carMotor,
+        carFirstRegistration,
+        carModel,
+        carType,
+        categoryId,
+        postId,
+      ]);
       if (result.affectedRows === 0) {
         return null;
       }
-      const updatedPost = await this.getPostById(postId)
-      return updatedPost ;
+      const updatedPost = await this.getPostById(postId);
+      return updatedPost;
     } catch (error) {
-      console.error('Error in updateUser:', error);
+      console.error("Error in updateUser:", error);
       throw error;
     }
   }
@@ -235,7 +280,7 @@ class PostModel {
       }
       return true;
     } catch (error) {
-      console.error('Error in deletepost:', error);
+      console.error("Error in deletepost:", error);
       throw error;
     }
   }
