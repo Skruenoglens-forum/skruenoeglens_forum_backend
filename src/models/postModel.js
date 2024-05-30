@@ -4,12 +4,14 @@ class PostModel {
   async getAllPosts() {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS image_ids
-        FROM post
-        JOIN users ON post.user_id = users.id
-        JOIN category ON post.category_id = category.id
-        LEFT JOIN post_image ON post.id = post_image.post_id
-        GROUP BY post.id, users.id, category.id;
+      SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
+      FROM post
+      JOIN users ON post.user_id = users.id
+      JOIN category ON post.category_id = category.id
+      LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
+      GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
+      LEFT JOIN post_image ON post.id = post_image.post_id
+      GROUP BY post.id, users.id, category.id;
       `;
       const [rows] = await db.query(query);
       return rows;
@@ -22,10 +24,12 @@ class PostModel {
   async getPostById(postId) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS post_image_ids
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
+        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
         LEFT JOIN post_image ON post.id = post_image.post_id
         WHERE post.id = ?
         GROUP BY post.id, users.id, category.id;
@@ -41,10 +45,12 @@ class PostModel {
   async getAllPostsByUserId(userId) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS post_image_ids
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
+        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
         LEFT JOIN post_image ON post.id = post_image.post_id
         WHERE user_id = ?
         GROUP BY post.id, users.id, category.id;
@@ -60,10 +66,12 @@ class PostModel {
   async getAllPostsByCategoryId(categoryId) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS post_image_ids
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
+        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
         LEFT JOIN post_image ON post.id = post_image.post_id
         WHERE category_id = ?
         GROUP BY post.id, users.id, category.id;
