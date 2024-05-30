@@ -42,7 +42,7 @@ class PostController {
       }
       res.json(post);
     } catch (e) {
-      res.status(500)({ error: "internal server error" });
+      res.status(500).json({ error: "internal server error" });
     }
   }
 
