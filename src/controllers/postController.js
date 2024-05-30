@@ -8,9 +8,11 @@ class PostController {
     try {
       const posts = await postModel.getAllPosts();
 
-      await posts.forEach((post) => {
+      posts.forEach((post) => {
         if (post.image_ids) {
-            post.image_ids = post.image_ids.split(',').map(id => parseInt(id, 10));
+          post.image_ids = post.image_ids
+            .split(",")
+            .map((id) => parseInt(id, 10));
         } else {
           post.image_ids = [];
         }
@@ -26,6 +28,15 @@ class PostController {
     const postId = req.params.id;
     try {
       const post = await postModel.getPostById(postId);
+
+      if (post.image_ids) {
+        post.image_ids = post.image_ids
+          .split(",")
+          .map((id) => parseInt(id, 10));
+      } else {
+        post.image_ids = [];
+      }
+
       if (!post) {
         res.status(404).json({ error: "post not found" });
       }
@@ -41,9 +52,11 @@ class PostController {
     try {
       const posts = await postModel.getAllPostsByUserId(userId);
 
-      await posts.forEach((post) => {
+      posts.forEach((post) => {
         if (post.image_ids) {
-            post.image_ids = post.image_ids.split(',').map(id => parseInt(id, 10));
+          post.image_ids = post.image_ids
+            .split(",")
+            .map((id) => parseInt(id, 10));
         } else {
           post.image_ids = [];
         }
@@ -61,9 +74,11 @@ class PostController {
     try {
       const posts = await postModel.getAllPostsByCategoryId(categoryId);
 
-      await posts.forEach((post) => {
+      posts.forEach((post) => {
         if (post.image_ids) {
-            post.image_ids = post.image_ids.split(',').map(id => parseInt(id, 10));
+          post.image_ids = post.image_ids
+            .split(",")
+            .map((id) => parseInt(id, 10));
         } else {
           post.image_ids = [];
         }
@@ -92,6 +107,12 @@ class PostController {
 
     try {
       const image = await postModel.getImage(postImageId);
+
+      if (!image) {
+        return res
+          .status(200)
+          .sendFile(path.join(__dirname, `../../uploads/default/post.png`));
+      }
 
       const imagePath = path.join(__dirname, `../../uploads/${image.image}`);
       fs.access(imagePath, fs.constants.F_OK, (err) => {
