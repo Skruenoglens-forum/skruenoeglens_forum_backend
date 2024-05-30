@@ -8,7 +8,7 @@ class CommentController {
                 res.json(comments);
             }
             catch(e){
-                res.staus(500).json({error: 'internal server Error'})
+                res.status(500).json({error: 'internal server Error'})
             }
     }
     

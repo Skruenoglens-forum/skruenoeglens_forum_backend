@@ -4,10 +4,12 @@ class PostModel {
   async getAllPosts() {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN post_image ON post.id = post_image.post_id
+        GROUP BY post.id, users.id, category.id;
       `;
       const [rows] = await db.query(query);
       return rows;
@@ -20,11 +22,13 @@ class PostModel {
   async getPostById(postId) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS post_image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
-        WHERE post.id = ?;
+        LEFT JOIN post_image ON post.id = post_image.post_id
+        WHERE post.id = ?
+        GROUP BY post.id, users.id, category.id;
       `;
       const [rows] = await db.query(query, [postId]);
       return rows[0];
@@ -37,11 +41,13 @@ class PostModel {
   async getAllPostsByUserId(userId) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS post_image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN post_image ON post.id = post_image.post_id
         WHERE user_id = ?
+        GROUP BY post.id, users.id, category.id;
       `;
       const [rows] = await db.query(query, [userId]);
       return rows;
@@ -54,11 +60,13 @@ class PostModel {
   async getAllPostsByCategoryId(categoryId) {
     try {
       const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name
+        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, GROUP_CONCAT(post_image.id) AS post_image_ids
         FROM post
         JOIN users ON post.user_id = users.id
         JOIN category ON post.category_id = category.id
+        LEFT JOIN post_image ON post.id = post_image.post_id
         WHERE category_id = ?
+        GROUP BY post.id, users.id, category.id;
       `;
       const [rows] = await db.query(query, [categoryId]);
       return rows;
