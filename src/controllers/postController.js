@@ -249,6 +249,14 @@ class PostController {
         return res.status(400).json({ error: "Dette er ikke dit opslag" });
       }
 
+      const postImages = await postModel.getAllImagesByPostId(postId)
+      postImages.forEach(postImage => {
+        // Delete the file
+        if (!postImage.image.includes("default")) {
+          fs.unlink(`./uploads/${postImage.image}`, () => {});
+        }
+      });
+
       // req.files is an array of files
       const files = req.files;
 
@@ -295,6 +303,14 @@ class PostController {
       if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
         return res.status(400).json({ error: "Dette er ikke dit opslag" });
       }
+
+      const postImages = await postModel.getAllImagesByPostId(postId)
+      postImages.forEach(postImage => {
+        // Delete the file
+        if (!postImage.image.includes("default")) {
+          fs.unlink(`./uploads/${postImage.image}`, () => {});
+        }
+      });
 
       const deletePost = await postModel.deletePost(postId);
       if (!deletePost) {
