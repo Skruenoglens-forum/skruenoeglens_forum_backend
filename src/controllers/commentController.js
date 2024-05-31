@@ -17,7 +17,7 @@ class CommentController {
         try{
         const comment = await commentModel.getCommentById(commentId)
         if (!comment){
-            res.status(404).json({error:'comment not found'});
+            res.status(404).json({error:'Kunne ikke finde kommentar'});
         }
         res.json(comment)
         }
@@ -64,12 +64,12 @@ class CommentController {
 
             const isUserOwnerOfComment = await commentModel.isUserOwnerOfComment(decoded.uid, commentId);
             if (!isUserOwnerOfComment && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-              return res.status(400).json({ error: 'This is not your comment'});
+              return res.status(400).json({ error: 'Dette er ikke din kommentar'});
             }
 
             const updatedComment = await commentModel.updateComment(description, commentId);
             if (!updatedComment){
-                return res.status(404).json({error: 'comment is not found'});
+                return res.status(404).json({error: 'Kunne ikke finde kommentar'});
             }
             res.json(updatedComment);
         }
@@ -89,12 +89,12 @@ class CommentController {
 
             const isUserOwnerOfPost = await commentModel.isUserOwnerOfPost(commentId, decoded.uid);
             if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-              return res.status(400).json({ error: 'This is not your comment'});
+              return res.status(400).json({ error: 'Dette er ikke din kommentar'});
             }
 
             const markCommentAsSolution = await commentModel.markCommentAsSolution(commentId, isSolution);
             if (!markCommentAsSolution){
-                return res.status(404).json({error: 'comment is not found'});
+                return res.status(404).json({error: 'Kunne ikke finde kommentar'});
             }
             res.json(markCommentAsSolution);
         }
@@ -112,12 +112,12 @@ class CommentController {
 
             const isUserOwnerOfComment = await commentModel.isUserOwnerOfComment(decoded.uid, commentId);
             if (!isUserOwnerOfComment && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-              return res.status(400).json({ error: 'This is not your comment'});
+              return res.status(400).json({ error: 'Dette er ikke din kommentar'});
             }
 
             const deletedComment = await commentModel.deleteComment(commentId);
             if (!deletedComment){
-                return res.status(404).json({error: 'comment not found'});
+                return res.status(404).json({error: 'Kunne ikke finde kommentar'});
             }
             res.json({message: 'Comment deleted successfully'});
         }

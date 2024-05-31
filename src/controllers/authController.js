@@ -12,7 +12,7 @@ class UserController {
       const user = await userModel.getUserByEmail(email);
 
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bruger' });
       }
       
       if (bcrypt.compareSync(password, user.password)) {
@@ -30,7 +30,7 @@ class UserController {
         });
       }
 
-      return res.status(404).json({ error: 'Wrong password' });
+      return res.status(404).json({ error: 'Forkert password' });
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
@@ -44,7 +44,7 @@ class UserController {
     try {
       var decoded = auth.verifyToken(token)
       if (!decoded || (decoded.uid != userId && decoded.roleId !== auth.ADMIN_ROLE_ID)) {
-        return res.status(403).json({ error: 'You are not allowed to update other users' });
+        return res.status(403).json({ error: 'Du har ikke tilladelse til at opdatere andre brugere' });
       }
 
       const newPasswordHash = bcrypt.hashSync(newPassword, 10);

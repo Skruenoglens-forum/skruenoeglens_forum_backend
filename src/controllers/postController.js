@@ -38,7 +38,7 @@ class PostController {
       }
 
       if (!post) {
-        res.status(404).json({ error: "post not found" });
+        res.status(404).json({ error: "Kunne ikke finde opslag" });
       }
       res.json(post);
     } catch (e) {
@@ -210,9 +210,12 @@ class PostController {
         categoryId
       );
 
-      // Save images associated with the post
-      for (const file of files) {
-        await postModel.saveImage(file.filename, newpost.id);
+      if (files && files.length > 0) {
+        for (const file of files) {
+          await postModel.saveImage(file.filename, newpost.id);
+        }
+      } else {
+        await postModel.saveImage("/default/post.png", newpost.id);
       }
 
       res.status(201).json(newpost);
@@ -243,7 +246,7 @@ class PostController {
         postId
       );
       if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-        return res.status(400).json({ error: "This is not your post" });
+        return res.status(400).json({ error: "Dette er ikke dit opslag" });
       }
 
       // req.files is an array of files
@@ -261,7 +264,7 @@ class PostController {
         categoryId
       );
       if (!updatedPost) {
-        return res.status(404).json({ error: "post is not found" });
+        return res.status(404).json({ error: "Kunne ikke finde opslag" });
       }
 
       // Remvoe old images
@@ -290,12 +293,12 @@ class PostController {
         postId
       );
       if (!isUserOwnerOfPost && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-        return res.status(400).json({ error: "This is not your post" });
+        return res.status(400).json({ error: "Dette er ikke dit opslag" });
       }
 
       const deletePost = await postModel.deletePost(postId);
       if (!deletePost) {
-        return res.status(404).json({ error: "post not found" });
+        return res.status(404).json({ error: "Kunne ikke finde opslag" });
       }
       res.json({ message: "Post deleted successfully" });
     } catch (e) {

@@ -22,7 +22,7 @@ class UserController {
     try {
       const user = await userModel.getUserById(userId);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bruger' });
       }
 
       delete user.password;
@@ -67,7 +67,7 @@ class UserController {
       // CHECK IF USER EXISTS
       const user = await userModel.getUserByEmail(email);
       if (user) {
-        return res.status(404).json({ error: 'Email is taken' });
+        return res.status(404).json({ error: 'Email er taget' });
       }
 
       // SAVE USER
@@ -99,17 +99,17 @@ class UserController {
 
       const decoded = auth.verifyToken(token);
       if (!decoded || (decoded.uid != userId && decoded.roleId !== auth.ADMIN_ROLE_ID)) {
-        return res.status(403).json({ error: 'You are not allowed to update other users' });
+        return res.status(403).json({ error: 'Du må ikke opdatere andre brugere' });
       }
 
       const emailIsTaken = await userModel.isEmailTakenByOtherUser(userId, email);
       if (emailIsTaken) {
-        return res.status(400).json({ error: 'Email is taken by other user' });
+        return res.status(400).json({ error: 'Email er taget af en anden bruger' });
       }
 
       const updatedUser = await userModel.updateUser(userId, name, email, description, filename);
       if (!updatedUser) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bruger' });
       }
 
       delete updatedUser.password;
@@ -127,12 +127,12 @@ class UserController {
       const decoded = auth.verifyToken(token);
 
       if (!decoded || (decoded.roleId == auth.DEFAULT_ROLE_ID && decoded.uid != userId)) {
-        return res.status(403).json({ error: 'You are not allowed to delete other users' });
+        return res.status(403).json({ error: 'Du må ikke slette andre brugere' });
       }
 
       const deletedUser = await userModel.deleteUser(userId);
       if (!deletedUser) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bruger' });
       }
 
       delete deletedUser.password;

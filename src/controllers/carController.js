@@ -20,7 +20,7 @@ class CarController {
     try {
       const car = await carModel.getCarById(carId);
       if (!car) {
-        return res.status(404).json({ error: 'Car not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bil' });
       }
 
       res.json(car);
@@ -100,12 +100,12 @@ class CarController {
 
       const isUserOwnerOfCar = await carModel.isUserOwnerOfCar(decoded.uid, carId);
       if (!isUserOwnerOfCar && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-        return res.status(400).json({ error: 'This is not your car' });
+        return res.status(400).json({ error: 'Dette er ikke din bil' });
       }
 
       const updatedCar = await carModel.updateCar(carId, brand, motor, firstRegistration, model, type, licensePlate, vin, filename);
       if (!updatedCar) {
-        return res.status(404).json({ error: 'Car not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bil' });
       }
 
       res.json(updatedCar);
@@ -123,12 +123,12 @@ class CarController {
 
       const isUserOwnerOfCar = await carModel.isUserOwnerOfCar(decoded.uid, carId);
       if (!isUserOwnerOfCar && decoded.roleId !== auth.ADMIN_ROLE_ID) {
-        return res.status(400).json({ error: 'This is not your car' });
+        return res.status(400).json({ error: 'Dette er ikke din bil' });
       }
 
       const deletedCar = await carModel.deleteCar(carId);
       if (!deletedCar) {
-        return res.status(404).json({ error: 'Car not found' });
+        return res.status(404).json({ error: 'Kunne ikke finde bil' });
       }
 
       res.json({ message: 'Car deleted successfully' });
