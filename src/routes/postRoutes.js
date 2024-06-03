@@ -11,23 +11,11 @@ const upload = multer({ storage });
 // GET all posts
 router.get('/', postController.getall);
 
-// GET all posts by search
-router.get('/:search', postController.getAllByPostSearch);
-
 // GET specific post by ID
 router.get('/:id', postController.getById);
 
 // GET all posts by UserId
 router.get('/users/:id', postController.getAllByUserId);
-
-// GET all posts by CategoryId
-router.get('/categories/:id', postController.getAllByCategoryId);
-
-// GET all posts by CategoryId and Car
-router.get('/categories/:id/:brand/:model',postController.getAllByCategoryIdAndLicensePlate)
-
-// GET all posts by Car
-router.get('/cars/:brand/:model', postController.getAllByLicensePlate)
 
 // GET postImageId by postId
 router.get('/:id/images', postController.getAllImagesById);

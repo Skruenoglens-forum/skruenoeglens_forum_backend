@@ -1,7 +1,7 @@
 const db = require("../utils/db");
 
 class PostModel {
-  async getAllPosts() {
+  async getAllPosts(sql, queryVars) {
     try {
       const query = `
       SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
@@ -11,30 +11,10 @@ class PostModel {
       LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
       GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
       LEFT JOIN post_image ON post.id = post_image.post_id
+      ${sql}
       GROUP BY post.id, users.id, category.id;
       `;
-      const [rows] = await db.query(query);
-      return rows;
-    } catch (error) {
-      console.error("Error in getAllPosts:", error);
-      throw error;
-    }
-  }
-
-  async getAllPostsBySearch(postSearch) {
-    try {
-      const query = `
-      SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
-      FROM post
-      JOIN users ON post.user_id = users.id
-      JOIN category ON post.category_id = category.id
-      LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
-      GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
-      LEFT JOIN post_image ON post.id = post_image.post_id
-      WHERE post.title LIKE ? OR post.description LIKE ?
-      GROUP BY post.id, users.id, category.id;
-      `;
-      const [rows] = await db.query(query, ["%"+postSearch+"%", "%"+postSearch+"%"]);
+      const [rows] = await db.query(query, queryVars);
       return rows;
     } catch (error) {
       console.error("Error in getAllPosts:", error);
@@ -80,69 +60,6 @@ class PostModel {
       return rows;
     } catch (error) {
       console.error("Error in getAllPostsByUserId:", error);
-      throw error;
-    }
-  }
-
-  async getAllPostsByCategoryId(categoryId) {
-    try {
-      const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
-        FROM post
-        JOIN users ON post.user_id = users.id
-        JOIN category ON post.category_id = category.id
-        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
-        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
-        LEFT JOIN post_image ON post.id = post_image.post_id
-        WHERE category_id = ?
-        GROUP BY post.id, users.id, category.id;
-      `;
-      const [rows] = await db.query(query, [categoryId]);
-      return rows;
-    } catch (error) {
-      console.error("Error in getAllPostsByCategoryId:", error);
-      throw error;
-    }
-  }
-
-  async getAllPostsByCategoryIdAndLicensePlate(categoryId, carBrand, carModel) {
-    try {
-      const query = `        
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
-        FROM post
-        JOIN users ON post.user_id = users.id
-        JOIN category ON post.category_id = category.id
-        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
-        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
-        LEFT JOIN post_image ON post.id = post_image.post_id
-        WHERE category_id = ? AND (car_brand = ? OR car_model = ?)
-        GROUP BY post.id, users.id, category.id;
-      `;
-      const [rows] = await db.query(query, [categoryId, carBrand, carModel]);
-      return rows;
-    } catch (error) {
-      console.error("Error in getAllPostsByCategoryIdAndLicensePlate");
-      console.error(error);
-      throw error;
-    }
-  }
-  async getAllPostsByLicensPlate(carBrand, carModel) {
-    try {
-      const query = `
-        SELECT post.*, users.name AS user_name, users.id AS user_id, category.name AS category_name, IFNULL(comment_counts.comment_count, 0) AS comment_count, GROUP_CONCAT(post_image.id) AS image_ids
-        FROM post
-        JOIN users ON post.user_id = users.id
-        JOIN category ON post.category_id = category.id
-        LEFT JOIN (SELECT post_id, COUNT(id) AS comment_count FROM comment
-        GROUP BY post_id) AS comment_counts ON post.id = comment_counts.post_id
-        LEFT JOIN post_image ON post.id = post_image.post_id
-        WHERE car_brand = ? OR car_model = ?
-        GROUP BY post.id, users.id, category.id;
-      `;
-      const [rows] = await db.query(query, [carBrand, carModel]);
-      return rows;
-    } catch (error) {
-      console.error("Error in getAllPostsByLicenseplate:", error);
       throw error;
     }
   }

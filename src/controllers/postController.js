@@ -5,29 +5,40 @@ const fs = require("fs");
 
 class PostController {
   async getall(req, res) {
-    try {
-      const posts = await postModel.getAllPosts();
-
-      posts.forEach((post) => {
-        if (post.image_ids) {
-          post.image_ids = post.image_ids
-            .split(",")
-            .map((id) => parseInt(id, 10));
-        } else {
-          post.image_ids = [];
-        }
-      });
-
-      res.json(posts);
-    } catch (e) {
-      res.status(500).json({ error: "internal server Error" });
+    const brand = req.query.brand;
+    const model = req.query.model;
+    const category_id = req.query.category_id;
+    const search = req.query.search;
+    
+    let sql = "WHERE ";
+    let conditions = [];
+    let queryVars = [];
+    
+    if (brand || model) {
+      queryVars.push(brand);
+      queryVars.push(model);
+      conditions.push("(car_brand = ? OR car_model = ?)");
     }
-  }
-
-  async getAllByPostSearch(req, res) {
-    const postSearch = req.params.search;
+    
+    if (category_id) {
+      queryVars.push(category_id);
+      conditions.push("category_id = ?");
+    }
+    
+    if (search) {
+      queryVars.push("%"+search+"%");
+      queryVars.push("%"+search+"%");
+      conditions.push("(post.title LIKE ? OR post.description LIKE ?)");
+    }
+    
+    if (conditions.length > 0) {
+      sql += conditions.join(" AND ");
+    } else {
+      sql = "";
+    }
+    
     try {
-      const posts = await postModel.getAllPostsBySearch(postSearch);
+      const posts = await postModel.getAllPosts(sql, queryVars);
 
       posts.forEach((post) => {
         if (post.image_ids) {
@@ -86,75 +97,6 @@ class PostController {
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });
-    }
-  }
-
-  async getAllByCategoryId(req, res) {
-    const categoryId = req.params.id;
-
-    try {
-      const posts = await postModel.getAllPostsByCategoryId(categoryId);
-
-      posts.forEach((post) => {
-        if (post.image_ids) {
-          post.image_ids = post.image_ids
-            .split(",")
-            .map((id) => parseInt(id, 10));
-        } else {
-          post.image_ids = [];
-        }
-      });
-
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ error: "Internal server error" });
-    }
-  }
-
-  async getAllByCategoryIdAndLicensePlate(req, res) {
-    const categoryId = req.params.id;
-    const carBrand = req.params.brand;
-    const carModel = req.params.model;
-
-    try {
-      const posts = await postModel.getAllPostsByCategoryIdAndLicensePlate(categoryId, carBrand, carModel);
-
-      posts.forEach((post) => {
-        if (post.image_ids) {
-          post.image_ids = post.image_ids
-            .split(",")
-            .map((id) => parseInt(id, 10));
-        } else {
-          post.image_ids = [];
-        }
-      });
-
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  }
-
-  async getAllByLicensePlate(req, res) {
-    const carBrand = req.params.brand;
-    const carModel = req.params.Model;
-
-    try {
-      const posts = await postModel.getAllPostsByLicensPlate(carBrand, carModel);
-
-      posts.forEach((post) => {
-        if (post.image_ids) {
-          post.image_ids = post.image_ids
-            .split(",")
-            .map((id) => parseInt(id, 10));
-        } else {
-          post.image_ids = [];
-        }
-      });
-
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
     }
   }
 
