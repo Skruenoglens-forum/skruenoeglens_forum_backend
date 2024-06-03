@@ -11,6 +11,9 @@ const upload = multer({ storage });
 // GET all posts
 router.get('/', postController.getall);
 
+// GET all posts by search
+router.get('/:search', postController.getAllByPostSearch);
+
 // GET specific post by ID
 router.get('/:id', postController.getById);
 

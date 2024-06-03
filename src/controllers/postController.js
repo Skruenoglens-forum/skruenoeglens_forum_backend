@@ -24,6 +24,27 @@ class PostController {
     }
   }
 
+  async getAllByPostSearch(req, res) {
+    const postSearch = req.params.search;
+    try {
+      const posts = await postModel.getAllPostsBySearch(postSearch);
+
+      posts.forEach((post) => {
+        if (post.image_ids) {
+          post.image_ids = post.image_ids
+            .split(",")
+            .map((id) => parseInt(id, 10));
+        } else {
+          post.image_ids = [];
+        }
+      });
+
+      res.json(posts);
+    } catch (e) {
+      res.status(500).json({ error: "internal server Error" });
+    }
+  }
+
   async getById(req, res) {
     const postId = req.params.id;
     try {
