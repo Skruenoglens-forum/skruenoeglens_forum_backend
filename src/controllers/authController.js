@@ -14,6 +14,10 @@ class UserController {
       if (!user) {
         return res.status(404).json({ error: 'Kunne ikke finde bruger' });
       }
+
+      if (user.role_id == auth.USER_BAN_ID) {
+        return res.status(403).json({ error: 'You are banned' });
+      }
       
       if (bcrypt.compareSync(password, user.password)) {
         let jwtSecretKey = config.JWT_SECRET_KEY;

@@ -18,7 +18,8 @@ CREATE TABLE user_role (
 
 INSERT INTO user_role (name) VALUES 
 ('Admin'),
-('User');
+('User'),
+('Ban');
 
 CREATE TABLE users (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,

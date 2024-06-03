@@ -26,4 +26,7 @@ router.put('/:id', authMiddleware.userAuth, upload.single('file'), userControlle
 // DELETE delete a user by ID
 router.delete('/:id', authMiddleware.userAuth, userController.delete);
 
+// PUT ban a user by ID
+router.put('/:id/ban', authMiddleware.adminAuth, userController.ban);
+
 module.exports = router;
