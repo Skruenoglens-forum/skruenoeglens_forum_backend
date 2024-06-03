@@ -171,8 +171,6 @@ class PostController {
 
         res.status(200).sendFile(imagePath);
       });
-
-      res.status(200).sendFile(imagePath);
     } catch (error) {
       console.log("Error:", error);
       res.status(500).json({ error: "Internal server error" });
