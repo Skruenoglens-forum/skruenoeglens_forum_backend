@@ -157,18 +157,30 @@ class UserController {
   async ban(req, res) {
     const userId = req.params.id;
 
-    const token = req.header("Authorization");
-
     try {
-      const decoded = auth.verifyToken(token);
-
-      const updatedUser = await userModel.banUser(userId);
-      if (!updatedUser) {
+      const bannedUser = await userModel.banUser(userId);
+      if (!bannedUser) {
         return res.status(404).json({ error: "Kunne ikke finde bruger" });
       }
 
-      delete updatedUser.password;
-      res.json(updatedUser);
+      delete bannedUser.password;
+      res.json(bannedUser);
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  async unban(req, res) {
+    const userId = req.params.id;
+
+    try {
+      const unbannedUser = await userModel.unbanUser(userId);
+      if (!unbannedUser) {
+        return res.status(404).json({ error: "Kunne ikke finde bruger" });
+      }
+
+      delete unbannedUser.password;
+      res.json(unbannedUser);
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });
     }

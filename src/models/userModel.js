@@ -130,6 +130,24 @@ class UserModel {
     }
   }
 
+  async unbanUser(userId) {
+    try {
+      const query = `
+        UPDATE users
+        SET role_id = ? WHERE id = ?
+      `;
+      const [result] = await db.query(query, [2, userId]);
+      if (result.affectedRows === 0) {
+        return null;
+      }
+      const updatedUser = await this.getUserById(userId);
+      return updatedUser;
+    } catch (error) {
+      console.error('Error in updateUser:', error);
+      throw error;
+    }
+  }
+
   async newPassword(userId, newPasswordHash) {
     try {
       const query = `
