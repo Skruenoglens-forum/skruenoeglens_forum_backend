@@ -65,6 +65,10 @@ class UserController {
   async create(req, res) {
     const { name, email, password, description } = req.body;
 
+    if (password.length < 7) {
+      return res.status(404).json({ error: 'Password skal mindst indeholde 7 karaktere' });
+    }
+
     let filename = "default/user.png";
 
     if (req.file) {
