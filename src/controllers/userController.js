@@ -3,6 +3,7 @@ const userModel = require("../models/userModel");
 const auth = require("../utils/auth");
 const path = require("path");
 const fs = require("fs");
+const postModel = require("../models/postModel");
 
 class UserController {
   async getAll(req, res) {
@@ -208,6 +209,9 @@ class UserController {
       if (!user.profile_image.includes("default")) {
         fs.unlink(`./uploads/${user.profile_image}`, () => {});
       }
+
+      // Remove user from posts
+      await postModel.removeUser(userId)
 
       const deletedUser = await userModel.deleteUser(userId);
       if (!deletedUser) {
