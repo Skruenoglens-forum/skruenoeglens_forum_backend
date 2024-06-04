@@ -4,6 +4,7 @@ const auth = require("../utils/auth");
 const path = require("path");
 const fs = require("fs");
 const postModel = require("../models/postModel");
+const commentModel = require("../models/commentModel");
 
 class UserController {
   async getAll(req, res) {
@@ -212,6 +213,9 @@ class UserController {
 
       // Remove user from posts
       await postModel.removeUser(userId)
+
+      // Remove user from comments
+      await commentModel.removeUser(userId)
 
       const deletedUser = await userModel.deleteUser(userId);
       if (!deletedUser) {

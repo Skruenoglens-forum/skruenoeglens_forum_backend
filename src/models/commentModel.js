@@ -35,7 +35,7 @@ class commentModel {
       const query = `
         SELECT comment.*, users.name, users.id AS user_id
         FROM comment
-        JOIN users ON comment.user_id = users.id
+        LEFT JOIN users ON comment.user_id = users.id
         WHERE comment.post_id = ?;
       `;
       const [rows] = await db.query(query, [postId]);
@@ -124,6 +124,24 @@ class commentModel {
       return rows.length > 0;
     } catch (error) {
       console.error('Error in isUserOwnerOfPost:', error);
+      throw error;
+    }
+  }
+
+  async removeUser(userId) {
+    try {
+      const query = `
+        UPDATE comment
+        SET user_id = null WHERE user_id = ?
+      `;
+      const [result] = await db.query(query, [userId]);
+      if (result.affectedRows === 0) {
+        return null;
+      }
+      const updatedComment = await this.getPostById(userId);
+      return updatedComment;
+    } catch (error) {
+      console.error("Error in removeUser:", error);
       throw error;
     }
   }
