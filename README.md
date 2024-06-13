@@ -1,43 +1,139 @@
-# SkruenoeglensBackendAPI
+# Skruenøglen API
 
-### **How to setup project in docker**
-```bash
-# Use docker-compose it runs MySQL DB, phpMyAdmin and skruenoeglen API
-$ docker-compose up -d
+Dette er SkruenøglensForum Backend/API.
 
-# copy & paste dump.sql into MySQL db - http://localhost:8080
+Dette API tilbyder omfattende funktionalitet til SkruenøglensForum Frontend til at administrere brugere, opslag, kommentarer og biler.
 
-# Import Postman collection in Postman
+APIet bruger basepath `[hostname]/api/v1/`
 
-$ sudo docker build -t [name] .
+## Funktioner
 
-# Start container by running image
-# 1. --name set name
-# 2. -p set ports
-# 3. -d run in background
-$ sudo docker run --name=[name] -p 80:8888 -d [image name]
+-   **Registering:** Opret bruger konto
+-   **Sikker log ind:** Log ind for bruger og admin.
+-   **Brugere:** Redigere bruger, slette bruger og skift password 
+-   **Opslag og kommentarer:** Opret opslag, redigere opslag, slette opslag, Kommentere på opslag og markere kommentarer som løsning.
+-   **Biler:** Opret, rediger og slet biler.
+-   **Admin:** Admin kan interagere med alt og bandlyse brugere.
+-   **Søgning og filtrering:** Hent opslag ud fra kategori, nummerplade og søgeord.
 
-```
+## Teknologi
 
-### **How to run node api**
-```bash
-# Use npm install
-$ npm i
+-   **Frontend**: SvelteKit
+-   **Backend**: Node.js
+-   **Database**: MySql
+-   **Deployment**: Docker
 
-# Create .env file like this:
-APP_PORT = 8585
+## Projekt Opsætning
+### Lokalt:
 
-DB_NAME=name
-DB_USERNAME=root
-DB_PASSWORD=pwd
-DB_HOST=192.168.1.135
-DB_PORT=3306
+1. **Klon Repositoriet**
 
-JWT_SECRET_KEY = secret
+    ```
+    git clone https://github.com/Skruenoglens-forum/skruenoeglensbackend_api.git
+    ```
 
-# Run api
-$ node src/app.js
+2. change directory to the project folder
 
+    ```
+    cd skruenoeglensbackend_api
+    ```
+
+3. **Installer Dependencies**
+
+    ```
+    npm install
+    ```
+
+4. **Init database**
+
+    1. Hvis du vil køre projektet lokalt, skal du først omdøbe filen `.env.example` til `.env` og derefter udfylde de nødvendige felter.
+    2. Nu skal du kopiere indholdet i filen `dump.sql` og køre queryen på din MySQL-server.
+
+5. **Starte Projektet Lokalt**
+
+    ```
+    npm run dev
+    ```
+
+### Docker:
+For at bygge og køre projektet ved hjælp af Docker, følg disse trin:
+1. **Byg Docker Image**
+    ```
+    docker build -t skruenoeglen_backend .
+    ```
+2. **Kør Containeren**
+    ```
+    docker run -p 8686:8686 skruenoeglen_backend
+    ```
+    Herefter er applikationen tilgængelig på `localhost:8686`.
+
+## Endpoints
+### Users
+
+**GET** `/users/` - Henter alle brugere.
+
+**GET** `/users/:id` - Henter specifik bruger.
+
+**GET** `/users/:id/image` - Henter brugers billeder.
+
+**POST** `/users/` - Opretter en ny bruger.
+
+**PUT** `/users/:id` - Opdaterer den aktuelt indloggede brugers profil.
+
+**PUT** `/users/:id:/ban` - Bandlyser en bruger.
+
+**PUT** `/users/:id/unban` - Fjerner bandlysning af en bruger.
+
+**DELETE** `/users/:id` - Sletter bruger ud fra id.
 
 ---
-> *Created by - Emil Andersen - 2024*
+### Posts
+**GET** `/posts?brand=ford&model=focus&category_id=1&search=motor` - Henter en liste over opslag.
+
+**GET** `/posts/:id` - Henter et specifikt opslag baseret på Id.
+
+**GET** `/posts/users/:id` - Henter et specifikt opslag baseret på brugerens Id.
+
+**GET** `/posts/:id/images` - Henter billeder for et opslag baseret på id Id.
+
+**GET** `/image/:id` - Henter et specifikt billede baseret på opslagets id Id.
+
+**POST** `/posts` - Opretter et nyt opslag.
+
+**PUT** `/posts/:id` - Opdaterer et eksisterende opslag. 
+
+**DELETE** `/posts/:id` - Sletter et opslag. 
+
+---
+### Comments
+**GET** `/comments/` - Henter alle kommentarer.
+
+**GET** `/comments/:id:` - Henter kommentarer til et specifikt opslag.
+
+**GET** `/comments/posts/:id` - Henter alle kommentarer ud fra post id.
+
+**POST** `/comments/posts/:id` - Tilføjer en kommentar til et opslag.
+
+**PUT** `/comments/:id` - Opdatere en kommentar til et opslag.
+
+**PUT** `/comments/:id/solution/{isSolution}` - Markere en kommentar som svar til et opslag.
+
+**DELETE** `/comments/:id` - Sletter kommentar til opslag.
+
+---
+### Cars
+**GET** `/cars/` - Henter alle biler.
+
+**GET** `/cars/:id` - Henter bil ud fra id.
+
+**GET** `/cars/users/:id` - Henter alle biler til for en specifik brugers id.
+
+**GET** `/cars/:id/image` - Henter billede fra bil id.
+
+**POST** `/cars/` - Opretter en ny bil til brugeren som har accesstoken.
+
+**PUT** `/cars/:id` - Opdatere en bil, ud fra bil id og tilsendt data.
+
+**DELETE** `/cars/:id` - Sletter en bil baseret på bil id.
+
+© Emil Storgaard Andersen, 2024.
