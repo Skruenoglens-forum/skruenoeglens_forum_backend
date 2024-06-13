@@ -1,32 +1,24 @@
-const express = require('express');
-const multer = require('multer');
-const carController = require('../controllers/carController');
-const authMiddleware = require('../middleware/authMiddleware');
-const storage = require('../utils/storageConfig');
+const express = require("express");
+const multer = require("multer");
+const carController = require("../controllers/carController");
+const authMiddleware = require("../middleware/authMiddleware");
+const storage = require("../utils/storageConfig");
 
 const router = express.Router();
 
 const upload = multer({ storage });
 
-// GET all cars
-router.get('/', carController.getAll);
+router.route("/")
+    .get(carController.getAll)                                                              // GET all cars
+    .post(authMiddleware.roleCheck(false), upload.single("file"), carController.create);    // POST create new car
 
-// GET specific car by ID
-router.get('/:id', carController.getById);
+router.route("/:id")
+    .get(carController.getById)                                                             // GET car by ID
+    .put(authMiddleware.roleCheck(false), upload.single("file"), carController.update)      // PUT update car by ID
+    .delete(authMiddleware.roleCheck(false), carController.delete);                         // DELETE delete car by ID
 
-// GET all cars by UserId
-router.get('/users/:id', carController.getAllByUserId);
+router.get("/users/:id", carController.getAllByUserId);                                     // GET all cars by UserId
 
-// GET image by ID
-router.get('/:id/image', carController.getImageById);
-
-// POST create a new car
-router.post('/', authMiddleware.userAuth, upload.single('file'), carController.create);
-
-// PUT update a car by ID
-router.put('/:id', authMiddleware.userAuth, upload.single('file'), carController.update);
-
-// DELETE delete a user by ID
-router.delete('/:id', authMiddleware.userAuth, carController.delete);
+router.get("/:id/image", carController.getImageById);                                       // GET image by ID
 
 module.exports = router;

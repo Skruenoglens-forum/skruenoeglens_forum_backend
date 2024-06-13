@@ -1,13 +1,11 @@
-const express = require('express');
-const authController = require('../controllers/authController');
-const authMiddleware = require('../middleware/authMiddleware');
+const express = require("express");
+const authController = require("../controllers/authController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// POST login
-router.post('/login', authController.login);
+router.post("/login", authController.login);                                                    // POST login
 
-// PUT new password
-router.put('/new/password/:id', authMiddleware.userAuth, authController.newPassword);
+router.put("/new/password/:id", authMiddleware.roleCheck(false), authController.newPassword);   // PUT new password
 
 module.exports = router;

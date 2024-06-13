@@ -1,25 +1,23 @@
-FROM node:18
+# Use official Node.js image as base
+FROM node:latest
 
-# Create app directory
+# Set working directory inside the container
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# Copy package.json and package-lock.json files
 COPY package*.json ./
 
+# Install dependencies
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --omit=dev
 
 # Copy the .env file to the working directory
 COPY .env .env
 
-# Bundle app source
+# Copy the rest of the application code
 COPY /src ./src/
 
-# Expose the desired port (if needed)
-EXPOSE 8585
+# Expose port 8686 to the outside world
+EXPOSE 8686
 
-# Define the command to run your Node.js application
+# Command to run the application
 CMD [ "node", "src/app.js" ]

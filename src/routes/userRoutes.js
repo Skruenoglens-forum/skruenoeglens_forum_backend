@@ -1,35 +1,26 @@
-const express = require('express');
-const multer = require('multer');
-const userController = require('../controllers/userController');
-const authMiddleware = require('../middleware/authMiddleware');
-const storage = require('../utils/storageConfig');
+const express = require("express");
+const multer = require("multer");
+const userController = require("../controllers/userController");
+const authMiddleware = require("../middleware/authMiddleware");
+const storage = require("../utils/storageConfig");
 
 const router = express.Router();
 
 const upload = multer({ storage });
 
-// GET all users
-router.get('/', userController.getAll);
+router.route("/")
+    .get(userController.getAll)                                                         // GET all users
+    .post(upload.single("file"), userController.create);                                // POST create new user
 
-// GET specific user by ID
-router.get('/:id', userController.getById);
+router.route("/:id")
+    .get(userController.getById)                                                        // GET user by ID
+    .put(authMiddleware.roleCheck(false), upload.single("file"), userController.update) // PUT update user by ID
+    .delete(authMiddleware.roleCheck(false), userController.delete);                    // DELETE delete user by ID
 
-// GET profile image by ID
-router.get('/:id/image', userController.getImageById);
+router.get("/:id/image", userController.getImageById);                                  // GET profile image by ID
 
-// POST create a new user
-router.post('/', upload.single('file'), userController.create);
+router.put("/:id/ban", authMiddleware.roleCheck(true), userController.ban);             // PUT ban user by ID
 
-// PUT update a user by ID
-router.put('/:id', authMiddleware.userAuth, upload.single('file'), userController.update);
-
-// PUT ban a user by ID
-router.put('/:id/ban', authMiddleware.adminAuth, userController.ban);
-
-// PUT un ban a user by ID
-router.put('/:id/unban', authMiddleware.adminAuth, userController.unban);
-
-// DELETE delete a user by ID
-router.delete('/:id', authMiddleware.userAuth, userController.delete);
+router.put("/:id/unban", authMiddleware.roleCheck(true), userController.unban);         // PUT unban user by ID
 
 module.exports = router;

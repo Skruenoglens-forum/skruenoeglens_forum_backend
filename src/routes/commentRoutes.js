@@ -1,28 +1,20 @@
-const express = require('express');
-const commentController = require('../controllers/commentController');
-const authMiddleware = require('../middleware/authMiddleware');
+const express = require("express");
+const commentController = require("../controllers/commentController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// GET all comments
-router.get('/', commentController.getall);
+router.get("/", commentController.getall);                                                                  // GET all comments
 
-// GET comment by ID
-router.get('/:id', commentController.getById);
+router.route("/:id")
+    .get(commentController.getById)                                                                         // GET comment by ID
+    .put(authMiddleware.roleCheck(false), commentController.update)                                         // PUT update comment by ID
+    .delete(authMiddleware.roleCheck(false), commentController.delete);                                     // DELETE delete comment by ID
 
-// GET all comments by PostId
-router.get('/posts/:id', commentController.getAllByPostId);
+router.route("/posts/:id")
+    .get(commentController.getAllByPostId)                                                                  // GET all comments by PostId
+    .post(authMiddleware.roleCheck(false), commentController.create);                                       // POST create new comment
 
-// POST create a new comment
-router.post('/posts/:id', authMiddleware.userAuth, commentController.create);
-
-// PUT update a comment by ID
-router.put('/:id', authMiddleware.userAuth, commentController.update);
-
-// PUT mark comment as solution by ID
-router.put('/:id/solution/:isSolution', authMiddleware.userAuth, commentController.solution);
-
-// DELETE delete a comment by ID
-router.delete('/:id', authMiddleware.userAuth, commentController.delete);
+router.put("/:id/solution/:isSolution", authMiddleware.roleCheck(false), commentController.markAsSolution); // PUT mark comment as solution by ID
 
 module.exports = router;

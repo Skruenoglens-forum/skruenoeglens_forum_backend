@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   website:
-    image: skruenoeglensbackendapi:latest
+    image: skruenoeglen_backend:latest
     ports:
-      - '8585:8585'
+      - '8686:8686'
     volumes:
       - uploads:/usr/src/app/uploads
 

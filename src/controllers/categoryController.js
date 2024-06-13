@@ -1,15 +1,14 @@
-const categoryModel = require('../models/categoryModel');
+const categoryModel = require("../models/categoryModel");
 
 class CategoryController {
-    async getall(req, res)
-    {
+    async getall(req, res) {
         try {
             const categories = await categoryModel.getAllCategories();
-                res.json(categories);
-            }
-            catch(e){
-                res.status(500).json({error: 'internal server Error'})
-            }
+            res.json(categories);
+        } catch (error) {
+            console.error("Error:", error);
+            res.status(500).json({ error: "Internal server error" });
+        }
     }
 }
 
