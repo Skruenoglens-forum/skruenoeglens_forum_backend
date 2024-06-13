@@ -52,7 +52,7 @@ APIet bruger basepath `[hostname]/api/v1/`
 5. **Starte Projektet Lokalt**
 
     ```
-    npm run dev
+    node src/app.js
     ```
 
 ### Docker:
