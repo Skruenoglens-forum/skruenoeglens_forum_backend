@@ -168,12 +168,8 @@ class UserController {
             await postModel.removeUser(userId);
             await commentModel.removeUser(userId);
 
-            const deletedUser = await userModel.deleteUser(userId);
-            if (!deletedUser) {
-                return res.status(404).json({ error: "Kunne ikke finde bruger" });
-            }
+            await userModel.deleteUser(userId);
 
-            delete deletedUser.password;
             res.json({ message: "User deleted successfully" });
         } catch (error) {
             console.error("Error:", error);

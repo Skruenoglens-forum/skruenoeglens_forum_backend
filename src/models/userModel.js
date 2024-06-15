@@ -106,8 +106,7 @@ class UserModel {
             DELETE FROM users
             WHERE id = ?;
         `;
-        const result = await db.queryDatabase(query, [userId]);
-        return result.affectedRows > 0;
+        await db.queryDatabase(query, [userId]);
     }
 }
 
