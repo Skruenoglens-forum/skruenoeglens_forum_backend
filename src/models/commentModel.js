@@ -99,7 +99,7 @@ class commentModel {
         if (result.affectedRows === 0) {
             return null;
         }
-        const updatedComment = await this.getPostById(userId);
+        const updatedComment = await models.getPostById(userId);
         return updatedComment;
     }
 
