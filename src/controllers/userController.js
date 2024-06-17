@@ -123,27 +123,12 @@ class UserController {
         }
     }
 
-    async banOrUnban(req, res, isBan) {
-        const userId = req.params.id;
-        try {
-            const updatedUser = isBan ? await userModel.banUser(userId) : await userModel.unbanUser(userId);
-            if (!updatedUser) {
-                return res.status(404).json({ error: "Kunne ikke finde bruger" });
-            }
-            delete updatedUser.password;
-            res.json(updatedUser);
-        } catch (error) {
-            console.error("Error:", error);
-            res.status(500).json({ error: "Internal server error" });
-        }
-    }
-
     async ban(req, res) {
-        await this.banOrUnban(req, res, true);
+        await banOrUnban(req, res, true);
     }
 
     async unban(req, res) {
-        await this.banOrUnban(req, res, false);
+        await banOrUnban(req, res, false);
     }
 
     async delete(req, res) {
@@ -175,6 +160,21 @@ class UserController {
             console.error("Error:", error);
             res.status(500).json({ error: "Internal server error" });
         }
+    }
+}
+
+const banOrUnban = async (req, res, isBan) => {
+    const userId = req.params.id;
+    try {
+        const updatedUser = isBan ? await userModel.banUser(userId) : await userModel.unbanUser(userId);
+        if (!updatedUser) {
+            return res.status(404).json({ error: "Kunne ikke finde bruger" });
+        }
+        delete updatedUser.password;
+        res.json(updatedUser);
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 

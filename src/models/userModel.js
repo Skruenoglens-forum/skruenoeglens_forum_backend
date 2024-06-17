@@ -81,7 +81,7 @@ class UserModel {
         if (result.affectedRows === 0) {
             return null;
         }
-        return await this.UserById(userId);
+        return await this.getUserById(userId);
     }
 
     async banUser(userId) {
